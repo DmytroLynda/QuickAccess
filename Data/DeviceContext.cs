@@ -1,11 +1,8 @@
 ﻿using ClientLogic.ExternalInterfaces;
-using DomainEntities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Path = DomainEntities.Path;
