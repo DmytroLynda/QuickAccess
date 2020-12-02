@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClientLogic\ClientLogic.csproj" />
-    <ProjectReference Include="..\DiplomaProject\DomainEntities.csproj" />
+    <ProjectReference Include="..\DomainEntities\DomainEntities.csproj" />
     <ProjectReference Include="..\ServerLogic\ServerLogic.csproj" />
   </ItemGroup>
 
