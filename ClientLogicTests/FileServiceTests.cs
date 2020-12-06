@@ -81,7 +81,7 @@ namespace ClientLogicTests
             Mock.Get(_fakeDeviceContext).Verify(deviceContext => deviceContext.GetFileInfoAsync(_fakeFilePath), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should get {nameof(FileInfo)} from {nameof(IDeviceContext)}.");
 
-            Assert.That(result, Is.EqualTo(expectedFileInfo));
+            Assert.That(result, Is.EqualTo(expectedFileInfo), "The real result and expected value should be equal.");
         }
     }
 }
