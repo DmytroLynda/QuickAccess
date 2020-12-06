@@ -9,7 +9,7 @@ namespace ClientLogic.ExternalInterfaces
 {
     public interface IDeviceContext
     {
-        Task<List<DirectoryPath>> OpenFolderAsync(DirectoryPath folder);
+        Task<List<Path>> OpenFolderAsync(DirectoryPath folder);
         Task<File> DownloadFileAsync(FilePath file);
         Task<FileInfo> GetFileInfoAsync(FilePath file);
     }

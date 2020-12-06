@@ -3,10 +3,8 @@ using System.IO;
 
 namespace DomainEntities
 {
-    public class DirectoryPath
+    public class DirectoryPath : Path
     {
-        public string Value { get; init; }
-
         public DirectoryPath(string path)
         {
             #region Check arguments
@@ -15,7 +13,7 @@ namespace DomainEntities
                 throw new ArgumentException($"'{nameof(path)}' cannot be null or empty", nameof(path));
             }
 
-            if (Path.HasExtension(path))
+            if (System.IO.Path.HasExtension(path))
             {
                 throw new ArgumentException("Passed path has extention, then, it is no a directory path: {0}", path);
             }

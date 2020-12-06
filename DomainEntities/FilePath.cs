@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace DomainEntities
 {
-    public class FilePath
+    public class FilePath : Path
     {
-        public string Value { get; }
-
         public FilePath(string path)
         {
             #region Check argument

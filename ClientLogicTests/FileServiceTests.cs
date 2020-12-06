@@ -76,12 +76,36 @@ namespace ClientLogicTests
 
             //Assert
             Mock.Get(_fakeDeviceContextFactory).Verify(factory => factory.GetDeviceContext(_fakeDevice), Times.Once,
-                $"{nameof(fileService.DownloadFileAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
+                $"{nameof(fileService.GetFileInfoAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
 
             Mock.Get(_fakeDeviceContext).Verify(deviceContext => deviceContext.GetFileInfoAsync(_fakeFilePath), Times.Once,
-                $"{nameof(fileService.DownloadFileAsync)} should get {nameof(FileInfo)} from {nameof(IDeviceContext)}.");
+                $"{nameof(fileService.GetFileInfoAsync)} should get {nameof(FileInfo)} from {nameof(IDeviceContext)}.");
 
-            Assert.That(result, Is.EqualTo(expectedFileInfo), "The real result and expected value should be equal.");
+            Assert.That(result, Is.EqualTo(expectedFileInfo));
+        }
+
+        [Test]
+        public void ShowDirectory_ReturnsPathes()
+        {
+            //Arrange
+            var expextedPathes = Mock.Of<List<Path>>();
+
+            var fakeDirectoryPath = new Mock<DirectoryPath>(@"C:\SomeDirectory").Object;
+            Mock.Get(_fakeDeviceContext).Setup(deviceContext => deviceContext.OpenFolderAsync(fakeDirectoryPath)).ReturnsAsync(expextedPathes);
+            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory);
+
+            //Act
+            var task = fileService.ShowDirectoryAsync(_fakeDevice, fakeDirectoryPath);
+            var result = task.Result;
+
+            //Assert
+            Mock.Get(_fakeDeviceContextFactory).Verify(factory => factory.GetDeviceContext(_fakeDevice), Times.Once,
+                $"{nameof(fileService.ShowDirectoryAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
+
+            Mock.Get(_fakeDeviceContext).Verify(deviceContext => deviceContext.OpenFolderAsync(fakeDirectoryPath), Times.Once,
+                $"{nameof(fileService.ShowDirectoryAsync)} should get folder {nameof(Path)}es from {nameof(IDeviceContext)}.");
+
+            Assert.That(result, Is.EqualTo(expextedPathes));
         }
     }
 }

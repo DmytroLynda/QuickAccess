@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using File = DomainEntities.File;
 using DirectoryPath = DomainEntities.DirectoryPath;
 using FileInfo = DomainEntities.FileInfo;
+using Path = DomainEntities.Path;
 
 namespace ClientLogic
 {
@@ -64,11 +65,23 @@ namespace ClientLogic
             return fileInfo;
         }
 
-        public async Task<List<DirectoryPath>> ShowDirectoryAsync(Device device, DirectoryPath directory)
+        public async Task<List<Path>> ShowDirectoryAsync(Device device, DirectoryPath directory)
         {
+            #region Check arguments
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+            #endregion
+
             IDeviceContext context = _deviceFactory.GetDeviceContext(device);
 
-            List<DirectoryPath> folder;
+            List<Path> folder;
             try
             { 
                 folder = await context.OpenFolderAsync(directory);
@@ -76,7 +89,7 @@ namespace ClientLogic
             catch(DirectoryNotFoundException e)
             {
                 _logger.LogWarning("The device: {0} does not share the directory: {1}.", device, directory, e);
-                folder = new List<DirectoryPath>(0);
+                folder = new List<Path>(0);
             }
 
             return folder;

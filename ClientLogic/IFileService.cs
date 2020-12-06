@@ -8,6 +8,6 @@ namespace ClientLogic
     {
         public Task<FileInfo> GetFileInfoAsync(Device from, FilePath file);
         public Task DownloadFileAsync(Device from, FilePath file);
-        public Task<List<DirectoryPath>> ShowDirectoryAsync(Device from, DirectoryPath directory);
+        public Task<List<Path>> ShowDirectoryAsync(Device from, DirectoryPath directory);
     }
 }

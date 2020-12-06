@@ -32,7 +32,7 @@ namespace Data
             throw new NotImplementedException();
         }
 
-        public async Task<List<DirectoryPath>> OpenFolderAsync(DirectoryPath folder)
+        public async Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
         {
             var content = JsonConvert.SerializeObject(folder);
             var httpContent = new StringContent(content);
@@ -45,7 +45,7 @@ namespace Data
                 var responce = await _httpClient.PostAsync(requestUriBuilder.Uri, httpContent);
                 responce.EnsureSuccessStatusCode();
 
-                return (List<DirectoryPath>)JsonConvert.DeserializeObject(await responce.Content.ReadAsStringAsync());
+                return (List<Path>)JsonConvert.DeserializeObject(await responce.Content.ReadAsStringAsync());
             }
             catch(Exception e)
             {
