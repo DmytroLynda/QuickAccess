@@ -32,5 +32,10 @@ namespace Data
 
             return new DeviceContext(deviceContextLogger, httpClient, deviceAddress);
         }
+
+        public ILocalDeviceContext GetLocalDevice()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

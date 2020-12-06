@@ -5,7 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Path = DomainEntities.Path;
+using File = DomainEntities.File;
+using DirectoryPath = DomainEntities.DirectoryPath;
 
 namespace ClientLogic
 {
@@ -20,21 +21,37 @@ namespace ClientLogic
             _deviceFactory = deviceFactory ?? throw new ArgumentNullException(nameof(deviceFactory));
         }
 
-        public void DownloadFile(Device device, Path file)
+        public async Task DownloadFileAsync(Device device, FilePath filePath)
+        {
+            #region check arguments
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            if (filePath is null)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+            #endregion
+
+            var remoteDeviceContext = _deviceFactory.GetDeviceContext(device);
+            var file = await remoteDeviceContext.DownloadFileAsync(filePath);
+
+            var thisDeviceContext = _deviceFactory.GetLocalDevice();
+            thisDeviceContext.SaveFile(file);
+        }
+
+        public string GetFileInfo(Device device, FilePath file)
         {
             throw new NotImplementedException();
         }
 
-        public string GetFileInfo(Device device, Path file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Path>> ShowDirectoryAsync(Device device, Path directory)
+        public async Task<List<DirectoryPath>> ShowDirectoryAsync(Device device, DirectoryPath directory)
         {
             IDeviceContext context = _deviceFactory.GetDeviceContext(device);
 
-            List<Path> folder;
+            List<DirectoryPath> folder;
             try
             { 
                 folder = await context.OpenFolderAsync(directory);
@@ -42,7 +59,7 @@ namespace ClientLogic
             catch(DirectoryNotFoundException e)
             {
                 _logger.LogWarning("The device: {0} does not share the directory: {1}.", device, directory, e);
-                folder = new List<Path>(0);
+                folder = new List<DirectoryPath>(0);
             }
 
             return folder;

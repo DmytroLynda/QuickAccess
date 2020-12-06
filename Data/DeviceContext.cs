@@ -1,11 +1,11 @@
 ﻿using ClientLogic.ExternalInterfaces;
+using DomainEntities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Path = DomainEntities.Path;
 
 namespace Data
 {
@@ -22,7 +22,12 @@ namespace Data
             _deviceAddress = deviceAddress ?? throw new ArgumentNullException(nameof(deviceAddress));
         }
 
-        public async Task<List<Path>> OpenFolderAsync(Path folder)
+        public Task<File> DownloadFileAsync(FilePath file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<DirectoryPath>> OpenFolderAsync(DirectoryPath folder)
         {
             var content = JsonConvert.SerializeObject(folder);
             var httpContent = new StringContent(content);
@@ -35,7 +40,7 @@ namespace Data
                 var responce = await _httpClient.PostAsync(requestUriBuilder.Uri, httpContent);
                 responce.EnsureSuccessStatusCode();
 
-                return (List<Path>)JsonConvert.DeserializeObject(await responce.Content.ReadAsStringAsync());
+                return (List<DirectoryPath>)JsonConvert.DeserializeObject(await responce.Content.ReadAsStringAsync());
             }
             catch(Exception e)
             {
