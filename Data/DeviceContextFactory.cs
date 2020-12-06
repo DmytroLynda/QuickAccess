@@ -24,10 +24,10 @@ namespace Data
             _logger = _loggerFactory.CreateLogger<IDeviceContextFactory>();
         }
 
-        public IDeviceContext GetDeviceContext(Device device)
+        public async Task<IDeviceContext> GetDeviceContext(Device device)
         {
             var deviceContextLogger = _loggerFactory.CreateLogger<IDeviceContext>();
-            var deviceAddress = _tracker.GetDevice(device);
+            var deviceAddress = await _tracker.GetDeviceUriAsync(device);
             var httpClient = new HttpClient();
 
             return new DeviceContext(deviceContextLogger, httpClient, deviceAddress);

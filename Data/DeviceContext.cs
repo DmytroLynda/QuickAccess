@@ -2,6 +2,7 @@
 using DomainEntities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using ServerLogic;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -38,7 +39,7 @@ namespace Data
             var httpContent = new StringContent(content);
 
             var requestUriBuilder = new UriBuilder(_deviceAddress);
-            requestUriBuilder.Query = "openFolder";
+            requestUriBuilder.Query = Query.OpenDirectory.ToString();
 
             try 
             { 

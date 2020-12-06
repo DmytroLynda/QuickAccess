@@ -30,7 +30,7 @@ namespace ClientLogicTests
             _fakeLocalDeviceContext = Mock.Of<ILocalDeviceContext>();
 
             var deviceContextFactoryMock = Mock.Get(_fakeDeviceContextFactory);
-            deviceContextFactoryMock.Setup(factory => factory.GetDeviceContext(_fakeDevice)).Returns(_fakeDeviceContext);
+            deviceContextFactoryMock.Setup(factory => factory.GetDeviceContext(_fakeDevice)).ReturnsAsync(_fakeDeviceContext);
             deviceContextFactoryMock.Setup(factory => factory.GetLocalDevice()).Returns(_fakeLocalDeviceContext);
         }
 

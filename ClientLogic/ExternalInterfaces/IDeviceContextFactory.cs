@@ -1,10 +1,11 @@
 ﻿using DomainEntities;
+using System.Threading.Tasks;
 
 namespace ClientLogic.ExternalInterfaces
 {
     public interface IDeviceContextFactory
     {
-        IDeviceContext GetDeviceContext(Device device);
+        Task<IDeviceContext> GetDeviceContext(Device device);
         ILocalDeviceContext GetLocalDevice();
     }
 }

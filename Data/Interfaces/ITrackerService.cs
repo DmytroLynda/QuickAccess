@@ -9,6 +9,6 @@ namespace Data
 {
     public interface ITrackerService
     {
-        Uri GetDevice(Device device);
+        Task<Uri> GetDeviceUriAsync(Device device);
     }
 }

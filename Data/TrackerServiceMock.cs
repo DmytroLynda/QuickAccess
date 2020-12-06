@@ -20,7 +20,7 @@ namespace Data
             _devices.Add(new Device { Id = 2, Name = "Julia" }, juliaUri.Uri);
         }
 
-        public Uri GetDevice(Device device)
+        public async Task<Uri> GetDeviceUriAsync(Device device)
         {
             return _devices[device];
         }

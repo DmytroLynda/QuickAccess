@@ -37,7 +37,7 @@ namespace ClientLogic
             }
             #endregion
 
-            var remoteDeviceContext = _deviceFactory.GetDeviceContext(device);
+            var remoteDeviceContext = await _deviceFactory.GetDeviceContext(device);
             var file = await remoteDeviceContext.DownloadFileAsync(filePath);
 
             var thisDeviceContext = _deviceFactory.GetLocalDevice();
@@ -58,7 +58,7 @@ namespace ClientLogic
             }
             #endregion
 
-            var deviceContext = _deviceFactory.GetDeviceContext(device);
+            var deviceContext = await _deviceFactory.GetDeviceContext(device);
 
             var fileInfo = await deviceContext.GetFileInfoAsync(file);
 
@@ -79,7 +79,7 @@ namespace ClientLogic
             }
             #endregion
 
-            IDeviceContext context = _deviceFactory.GetDeviceContext(device);
+            IDeviceContext context = await _deviceFactory.GetDeviceContext(device);
 
             List<Path> folder;
             try
