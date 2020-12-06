@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using File = DomainEntities.File;
 using DirectoryPath = DomainEntities.DirectoryPath;
+using FileInfo = DomainEntities.FileInfo;
 
 namespace ClientLogic
 {
@@ -42,9 +43,25 @@ namespace ClientLogic
             thisDeviceContext.SaveFile(file);
         }
 
-        public string GetFileInfo(Device device, FilePath file)
+        public async Task<FileInfo> GetFileInfoAsync(Device device, FilePath file)
         {
-            throw new NotImplementedException();
+            #region Check arguments
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+            #endregion
+
+            var deviceContext = _deviceFactory.GetDeviceContext(device);
+
+            var fileInfo = await deviceContext.GetFileInfoAsync(file);
+
+            return fileInfo;
         }
 
         public async Task<List<DirectoryPath>> ShowDirectoryAsync(Device device, DirectoryPath directory)

@@ -11,5 +11,6 @@ namespace ClientLogic.ExternalInterfaces
     {
         Task<List<DirectoryPath>> OpenFolderAsync(DirectoryPath folder);
         Task<File> DownloadFileAsync(FilePath file);
+        Task<FileInfo> GetFileInfoAsync(FilePath file);
     }
 }

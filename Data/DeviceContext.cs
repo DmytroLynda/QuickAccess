@@ -27,6 +27,11 @@ namespace Data
             throw new NotImplementedException();
         }
 
+        public Task<FileInfo> GetFileInfoAsync(FilePath file)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<DirectoryPath>> OpenFolderAsync(DirectoryPath folder)
         {
             var content = JsonConvert.SerializeObject(folder);

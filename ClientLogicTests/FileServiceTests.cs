@@ -24,7 +24,7 @@ namespace ClientLogicTests
         }
 
         [Test]
-        public void DownloadFile_SaveFileOnLocalDevice()
+        public void DownloadFile_SavesFileOnLocalDevice()
         {
             //Arrange
             var fakeDevice = Mock.Of<Device>();
@@ -57,6 +57,34 @@ namespace ClientLogicTests
 
             Mock.Get(fakeLocalDeviceContext).Verify(localDevice => localDevice.SaveFile(fakeFile), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should save a file, which was got from {nameof(IDeviceContext)} to {nameof(ILocalDeviceContext)}");
+        }
+
+        [Test]
+        public void GetFileInfo_ReturnsFileInfo()
+        {
+            //Arrange
+            var fakeDevice = Mock.Of<Device>();
+            var deviceContextFactoryMock = Mock.Get(fakeDeviceContextFactory);
+            deviceContextFactoryMock.Setup(factory => factory.GetDeviceContext(fakeDevice)).Returns(fakeDeviceContext);
+            var fakeFilePath = new Mock<FilePath>(@"C:\someFile.txt").Object;
+
+            var expected = Mock.Of<FileInfo>();
+            Mock.Get(fakeDeviceContext).Setup(deviceContext => deviceContext.GetFileInfoAsync(fakeFilePath)).ReturnsAsync(expected);
+
+            var fileService = new FileService(fakeLogger, fakeDeviceContextFactory);
+
+            //Act
+            var task = fileService.GetFileInfoAsync(fakeDevice, fakeFilePath);
+            var result = task.Result;
+
+            //Assert
+            deviceContextFactoryMock.Verify(factory => factory.GetDeviceContext(fakeDevice), Times.Once,
+                $"{nameof(fileService.DownloadFileAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
+
+            Mock.Get(fakeDeviceContext).Verify(deviceContext => deviceContext.GetFileInfoAsync(fakeFilePath), Times.Once,
+                $"{nameof(fileService.DownloadFileAsync)} should get {nameof(FileInfo)} from {nameof(IDeviceContext)}.");
+
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }
