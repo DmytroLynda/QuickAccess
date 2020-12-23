@@ -29,7 +29,7 @@ namespace Data
             var deviceContextLogger = _loggerFactory.CreateLogger<IDeviceContext>();
             var deviceAddress = await _tracker.GetDeviceUriAsync(device);
 
-            return new DeviceContext(deviceContextLogger, deviceAddress);
+            return new DeviceContext(deviceContextLogger, deviceAddress, device);
         }
 
         public ILocalDeviceContext GetLocalDevice()

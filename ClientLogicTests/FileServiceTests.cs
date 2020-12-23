@@ -38,7 +38,7 @@ namespace ClientLogicTests
         public void DownloadFile_SavesFileOnLocalDevice()
         {
             //Arrange
-            var fakeFile = Mock.Of<File>();
+            var fakeFile = Mock.Of<byte[]>();
             Mock.Get(_fakeDeviceContext).Setup(context => context.DownloadFileAsync(_fakeFilePath)).ReturnsAsync(fakeFile);
 
             var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory);

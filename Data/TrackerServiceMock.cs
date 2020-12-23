@@ -22,7 +22,7 @@ namespace Data
 
         public async Task<Uri> GetDeviceUriAsync(Device device)
         {
-            return _devices[device];
+            return await Task.FromResult(_devices[device]);
         }
     }
 }

@@ -13,6 +13,7 @@
     <ProjectReference Include="..\ClientLogic\ClientLogic.csproj" />
     <ProjectReference Include="..\DomainEntities\DomainEntities.csproj" />
     <ProjectReference Include="..\ServerLogic\ServerLogic.csproj" />
+    <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
 
 </Project>

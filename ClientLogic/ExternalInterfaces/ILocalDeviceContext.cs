@@ -4,6 +4,6 @@ namespace ClientLogic.ExternalInterfaces
 {
     public interface ILocalDeviceContext
     {
-        void SaveFile(File file);
+        void SaveFile(byte[] file);
     }
 }
