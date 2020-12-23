@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Server.DTOs;
 using System;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace Server.Internal
 {
-    public class HttpServer : IServer
+    internal class HttpServer : IServer
     {
         private readonly ILogger<HttpServer> _logger;
         private readonly IRequestHandlerFactory _requestHandlerFactory;
@@ -29,7 +30,7 @@ namespace Server
                 var incomingContext = await httpListener.GetContextAsync();
 
                 try
-                { 
+                {
                     await HandleRequestAsync(incomingContext);
                 }
                 catch (Exception ex)
@@ -46,7 +47,7 @@ namespace Server
             var request = await GetRequest(httpRequest);
 
             var requestHandler = _requestHandlerFactory.Create(request.Query);
-            var response = requestHandler.Handle(request.Data);
+            var response = await requestHandler.HandleAsync(request.Request);
 
             var httpResponseStream = incomingContext.Response.OutputStream;
             await httpResponseStream.WriteAsync(response);

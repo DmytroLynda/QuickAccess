@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Server
 {
-    public interface IRequestHandlerFactory
+    public class ResponseDTO
     {
-        IRequestHandler Create(Query query);
+        public ResponseType Type { get; set; }
+        public byte[] Response { get; set; }
     }
 }
