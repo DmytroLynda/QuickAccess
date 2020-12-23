@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Server
 {
-    public interface IServer
+    public class ResponseDTO
     {
-        Task StartAsync(string serverUri);
     }
 }

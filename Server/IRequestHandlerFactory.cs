@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Server
 {
-    public interface IServer
+    public interface IRequestHandlerFactory
     {
-        Task StartAsync(string serverUri);
+        IRequestHandler Create(Query query);
     }
 }
