@@ -33,26 +33,9 @@ namespace Data
             throw new NotImplementedException();
         }
 
-        public async Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
+        public Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
         {
-            var content = JsonConvert.SerializeObject(folder);
-            var httpContent = new StringContent(content);
-
-            var requestUriBuilder = new UriBuilder(_deviceAddress);
-            requestUriBuilder.Query = Query.OpenDirectory.ToString();
-
-            try 
-            { 
-                var responce = await _httpClient.PostAsync(requestUriBuilder.Uri, httpContent);
-                responce.EnsureSuccessStatusCode();
-
-                return (List<Path>)JsonConvert.DeserializeObject(await responce.Content.ReadAsStringAsync());
-            }
-            catch(Exception e)
-            {
-                _logger.LogInformation("Some error was occured!", e);
-                throw;
-            }
+            throw new NotImplementedException();
         }
     }
 }
