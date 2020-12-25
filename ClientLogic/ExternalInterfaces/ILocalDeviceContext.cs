@@ -1,9 +1,10 @@
 ﻿using DomainEntities;
+using System.Threading.Tasks;
 
 namespace ClientLogic.ExternalInterfaces
 {
     public interface ILocalDeviceContext
     {
-        void SaveFile(byte[] file);
+        Task SaveFileAsync(byte[] file, string name);
     }
 }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using File = DomainEntities.File;
 using DirectoryPath = DomainEntities.DirectoryPath;
 using FileInfo = DomainEntities.FileInfo;
 using Path = DomainEntities.Path;
@@ -38,10 +37,10 @@ namespace ClientLogic
             #endregion
 
             var remoteDeviceContext = await _deviceFactory.GetDeviceContext(device);
-            var file = await remoteDeviceContext.DownloadFileAsync(filePath);
+            var fileResponse = await remoteDeviceContext.DownloadFileAsync(filePath);
 
             var thisDeviceContext = _deviceFactory.GetLocalDevice();
-            thisDeviceContext.SaveFile(file);
+            await thisDeviceContext.SaveFileAsync(fileResponse.Body, fileResponse.ShortFileName);
         }
 
         public async Task<FileInfo> GetFileInfoAsync(Device device, FilePath file)

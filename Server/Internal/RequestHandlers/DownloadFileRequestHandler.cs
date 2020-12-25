@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Server.DTOs;
+using Server.DTOs.ResponseTypes;
 using Server.Enums;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,13 @@ namespace Server.Internal.RequestHandlers
             var fileInfo = new FileInfo(request.Path);
             if (fileInfo.Exists)
             {
-                return await GetFileAsync(fileInfo);
+                var response = new FileResponseDTO
+                {
+                    File = await GetFileAsync(fileInfo),
+                    ShortFileName = Path.GetFileName(request.Path),
+                };
+                var serializedResponse = JsonConvert.SerializeObject(response);
+                return Encoding.UTF8.GetBytes(serializedResponse);
             }
             else
             {
@@ -62,7 +69,7 @@ namespace Server.Internal.RequestHandlers
             var responseDTO = new ResponseDTO
             {
                 Type = type,
-                Response = response
+                Data = response
             };
 
             var serializedResponse = JsonConvert.SerializeObject(responseDTO);
