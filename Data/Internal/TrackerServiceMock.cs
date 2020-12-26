@@ -1,13 +1,12 @@
-﻿using DomainEntities;
+﻿using Data.Internal.Interfaces;
+using DomainEntities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data
 {
-    public class TrackerServiceMock : ITrackerService
+    internal class TrackerServiceMock : ITrackerService
     {
         private readonly Dictionary<Device, Uri> _devices = new Dictionary<Device, Uri>();
 

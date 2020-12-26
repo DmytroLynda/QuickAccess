@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Data.Interfaces;
+using Data.Internal.Interfaces;
 using DomainEntities;
 using Newtonsoft.Json;
 using Server.DTOs;
@@ -8,9 +8,9 @@ using Server.Enums;
 using System;
 using System.Text;
 
-namespace Data.Preprocessors
+namespace Data.Internal.Preprocessors
 {
-    public class DownloadFileOperationPreprocessor : IOperationPreprocessor<FilePath, File>
+    internal class DownloadFileOperationPreprocessor : IOperationPreprocessor<FilePath, File>
     {
         private readonly IMapper _mapper;
 

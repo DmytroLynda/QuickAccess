@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Server.DTOs;
+using Server.Internal.Interfaces;
 using System;
 using System.Net;
 using System.Text;

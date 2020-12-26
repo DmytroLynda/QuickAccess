@@ -9,9 +9,9 @@ using DirectoryPath = DomainEntities.DirectoryPath;
 using FileInfo = DomainEntities.FileInfo;
 using Path = DomainEntities.Path;
 
-namespace ClientLogic
+namespace ClientLogic.Internal
 {
-    public class FileService : IFileService
+    internal class FileService : IFileService
     {
         private readonly ILogger<IFileService> _logger;
         private readonly IDeviceContextFactory _deviceFactory;
@@ -82,10 +82,10 @@ namespace ClientLogic
 
             List<Path> folder;
             try
-            { 
+            {
                 folder = await context.OpenFolderAsync(directory);
             }
-            catch(DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException e)
             {
                 _logger.LogWarning("The device: {0} does not share the directory: {1}.", device, directory, e);
                 folder = new List<Path>(0);

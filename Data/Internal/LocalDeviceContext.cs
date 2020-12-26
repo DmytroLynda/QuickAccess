@@ -1,14 +1,11 @@
 ﻿using ClientLogic.ExternalInterfaces;
 using DomainEntities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data
 {
-    public class LocalDeviceContext : ILocalDeviceContext
+    internal class LocalDeviceContext : ILocalDeviceContext
     {
         private readonly DirectoryPath _saveDirectory;
 

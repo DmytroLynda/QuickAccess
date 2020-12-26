@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using ClientLogic;
-using Data.Interfaces;
-using Data.Preprocessors;
+using Data.Internal.Interfaces;
+using Data.Internal.Preprocessors;
 using DomainEntities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 
 namespace Data
 {
-    public class OperationPreprocessorFactory : IOperationPreprocessorFactory
+    internal class OperationPreprocessorFactory : IOperationPreprocessorFactory
     {
         private readonly List<(Type preprocessor, Type TRequest, Type TResponse)> _bindings;
         private readonly IMapper _mapper;

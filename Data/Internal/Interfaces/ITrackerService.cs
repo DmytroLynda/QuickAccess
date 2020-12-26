@@ -1,13 +1,10 @@
 ﻿using DomainEntities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace Data.Internal.Interfaces
 {
-    public interface ITrackerService
+    internal interface ITrackerService
     {
         Task<Uri> GetDeviceUriAsync(Device device);
     }

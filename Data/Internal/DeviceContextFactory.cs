@@ -1,17 +1,13 @@
 ﻿using ClientLogic.ExternalInterfaces;
-using Data.Interfaces;
+using Data.Internal.Interfaces;
 using DomainEntities;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace Data.Internal
 {
-    public class DeviceContextFactory : IDeviceContextFactory
+    internal class DeviceContextFactory : IDeviceContextFactory
     {
         private readonly ILogger<IDeviceContextFactory> _logger;
         private readonly ILoggerFactory _loggerFactory;

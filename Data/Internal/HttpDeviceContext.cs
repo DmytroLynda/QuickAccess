@@ -4,18 +4,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Server.DTOs;
-using Newtonsoft.Json;
-using System.Text;
-using Server.Enums;
 using System.Net.Http;
-using ClientLogic;
-using Server.DTOs.ResponseTypes;
-using Data.Interfaces;
+using Data.Internal.Interfaces;
 
-namespace Data
+namespace Data.Internal
 {
-    public class HttpDeviceContext : IDeviceContext
+    internal class HttpDeviceContext : IDeviceContext
     {
         private readonly ILogger<IDeviceContext> _logger;
         private readonly Device _device;
