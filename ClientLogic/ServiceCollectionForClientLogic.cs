@@ -7,7 +7,7 @@ namespace ClientLogic
     {
         public static void ConfigureForClientLogic(this IServiceCollection services)
         {
-            services.AddSingleton<IFileService, FileService>();
+            services.AddTransient<IFileService, FileService>();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Server
     {
         public static void ConfigureForServer(this IServiceCollection services)
         {
-            services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
+            services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
             services.AddSingleton<IServer, HttpServer>();
         }
     }
