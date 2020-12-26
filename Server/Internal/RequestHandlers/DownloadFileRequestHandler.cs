@@ -27,7 +27,7 @@ namespace Server.Internal.RequestHandlers
             var fileInfo = new FileInfo(request.Path);
             if (fileInfo.Exists)
             {
-                var response = new FileResponseDTO
+                var response = new FileDTO
                 {
                     File = await GetFileAsync(fileInfo),
                     ShortFileName = Path.GetFileName(request.Path),

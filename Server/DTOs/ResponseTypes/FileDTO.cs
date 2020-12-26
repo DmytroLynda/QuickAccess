@@ -1,6 +1,6 @@
 ﻿namespace Server.DTOs.ResponseTypes
 {
-    public class FileResponseDTO
+    public class FileDTO
     {
         public string ShortFileName { get; set; }
         public byte[] File { get; set; }

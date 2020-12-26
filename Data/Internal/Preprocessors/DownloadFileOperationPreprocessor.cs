@@ -41,7 +41,7 @@ namespace Data.Internal.Preprocessors
             if (response.Type == ResponseType.File)
             {
                 var serializedData = Encoding.UTF8.GetString(response.Data);
-                var data = JsonConvert.DeserializeObject<FileResponseDTO>(serializedData);
+                var data = JsonConvert.DeserializeObject<FileDTO>(serializedData);
                 return _mapper.Map<File>(data);
             }
             else if (response.Type == ResponseType.Error)
