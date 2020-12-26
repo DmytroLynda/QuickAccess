@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ClientLogic;
 using Data.Interfaces;
 using DomainEntities;
 using Newtonsoft.Json;
