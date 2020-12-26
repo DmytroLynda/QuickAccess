@@ -13,37 +13,39 @@ namespace ThesisProject
     /// </summary>
     public partial class App : Application
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IServer _server;
-        private readonly IFileService _fileService;
-
-        public App()
-        {
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-
-            _serviceProvider = services.BuildServiceProvider();
-
-            _server = _serviceProvider.GetService<IServer>();
-            _fileService = _serviceProvider.GetService<IFileService>();
-        }
+        private IServiceProvider ServiceProvider { get; set; }
+        private IServer Server { get; set; }
+        private IFileService FileService { get; set; }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            //First: Data layer configuratin.
+            //Data layer configuratin.
             services.ConfigureForData();
 
-            //Second: Application layer configuration
+            //Application layer configuration
             services.ConfigureForServer();
             services.ConfigureForClientLogic();
 
+            //UI layer configuration
+            services.ConfigureForUI();
+
+            //External dependencies
             services.AddLogging();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        private void OnStartup(object sender, StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
+            ServiceProvider = services.BuildServiceProvider();
+
+            Server = ServiceProvider.GetService<IServer>();
+            FileService = ServiceProvider.GetService<IFileService>();
+
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
     }
 }
