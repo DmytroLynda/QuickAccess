@@ -33,7 +33,7 @@
                         <StackPanel Name="SidebarPanel" Orientation="Vertical"  Width="200" >
                         <Button Margin="5" Name="AddDeviceButton" Content="Add new device" Height="40" FontSize="16"></Button>
                         <Button Margin="5,0,5,5" Name="RemoveDeviceButton" Content="Remove device" Height="40" FontSize="16"></Button>
-                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"></Button>
+                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16" MouseDoubleClick="ConfigurationButton_MouseDoubleClick"></Button>
                         </StackPanel>
                     </Border>
                 </Border>

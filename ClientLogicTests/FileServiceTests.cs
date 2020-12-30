@@ -1,5 +1,6 @@
 ﻿using ClientLogic;
 using ClientLogic.ExternalInterfaces;
+using ClientLogic.Internal;
 using DomainEntities;
 using Microsoft.Extensions.Logging;
 using Moq;

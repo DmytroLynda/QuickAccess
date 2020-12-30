@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Server.Internal;
 using Server.Internal.Interfaces;
+using Server.Internal.RequestHandlers;
 
 namespace Server
 {
@@ -10,6 +11,8 @@ namespace Server
         {
             services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
             services.AddSingleton<IServer, HttpServer>();
+
+            services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();
         }
     }
 }

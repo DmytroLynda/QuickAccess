@@ -4,10 +4,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DirectoryPath = DomainEntities.DirectoryPath;
 using FileInfo = DomainEntities.FileInfo;
 using Path = DomainEntities.Path;
+
+[assembly: InternalsVisibleTo("ClientLogicTests")]
 
 namespace ClientLogic.Internal
 {

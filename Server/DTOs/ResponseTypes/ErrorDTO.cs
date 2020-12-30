@@ -1,7 +1,9 @@
-﻿namespace Server.DTOs.ResponseTypes
+﻿using System;
+
+namespace Server.DTOs.ResponseTypes
 {
     public class ErrorDTO
     {
-        public string Message { get; set; }
+        public Exception Exception { get; set; }
     }
 }

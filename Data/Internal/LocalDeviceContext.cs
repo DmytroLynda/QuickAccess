@@ -21,8 +21,8 @@ namespace Data
 
         public async Task SaveFileAsync(byte[] file, string name)
         {
-            var fileInfo = new System.IO.FileInfo(name);
-            var fileStream = fileInfo.Create();
+            var fileInfo = new System.IO.FileInfo(_saveDirectory.Value + name);
+            using var fileStream = fileInfo.Create();
             await fileStream.WriteAsync(file);
         }
     }

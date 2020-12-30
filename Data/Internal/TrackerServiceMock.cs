@@ -12,7 +12,7 @@ namespace Data
 
         public TrackerServiceMock()
         {
-            var dimaUri = new UriBuilder("http", "192.168.0.213", 8080);
+            var dimaUri = new UriBuilder("http", "127.0.0.1", 65432);
             var juliaUri = new UriBuilder("http", "192.168.0.220", 8080);
 
             _devices.Add(new Device { Id = 1, Name = "Dima" }, dimaUri.Uri);

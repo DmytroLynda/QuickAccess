@@ -29,28 +29,16 @@ namespace Server.Internal.RequestHandlers
             {
                 var response = new FileDTO
                 {
-                    File = await GetFileAsync(fileInfo),
+                    Body = await GetFileAsync(fileInfo),
                     ShortFileName = Path.GetFileName(request.Path),
                 };
                 var serializedResponse = JsonConvert.SerializeObject(response);
-                return Encoding.UTF8.GetBytes(serializedResponse);
+                return FormResponse(ResponseType.File, Encoding.UTF8.GetBytes(serializedResponse));
             }
             else
             {
-                return FileDoesNotExist(request.Path);
+                throw new FileNotFoundException(request.Path);
             }
-        }
-
-        private byte[] FileDoesNotExist(string file)
-        {
-            var error = new ErrorDTO
-            {
-                Message = $"File: {file} does not exist."
-            };
-            var serializedError = JsonConvert.SerializeObject(error);
-            var errorBytes = Encoding.UTF8.GetBytes(serializedError);
-
-            return FormResponse(ResponseType.Error, errorBytes);
         }
 
         private async Task<byte[]> GetFileAsync(FileInfo fileInfo)

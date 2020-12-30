@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Server.DTOs;
+using Server.DTOs.ResponseTypes;
+using Server.Internal.Exceptions;
 using Server.Internal.Interfaces;
 using System;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Internal
@@ -22,6 +25,7 @@ namespace Server.Internal
 
         public async Task StartAsync(string serverUri)
         {
+            Thread.CurrentThread.Name = "Server";
             var httpListener = new HttpListener();
             httpListener.Prefixes.Add(serverUri);
             httpListener.Start();
@@ -46,13 +50,40 @@ namespace Server.Internal
             var httpRequest = incomingContext.Request;
 
             var request = await GetRequest(httpRequest);
+            
+            byte[] response;
+            try
+            { 
+                var requestHandler = _requestHandlerFactory.Create(request.Query);
+                response = await requestHandler.HandleAsync(request.Request);
+            }
+            catch (Exception ex)
+            {
+                var serverException = new ServerException(ex);
+                response = FormErrorResponse(serverException);
+            }
 
-            var requestHandler = _requestHandlerFactory.Create(request.Query);
-            var response = await requestHandler.HandleAsync(request.Request);
+            using var httpResponse = incomingContext.Response;
+            await httpResponse.OutputStream.WriteAsync(response);
+        }
 
-            var httpResponseStream = incomingContext.Response.OutputStream;
-            await httpResponseStream.WriteAsync(response);
-            await httpResponseStream.FlushAsync();
+        private byte[] FormErrorResponse(Exception exception)
+        {
+            var error = new ErrorDTO
+            {
+                Exception = exception
+            };
+            var serializedError = JsonConvert.SerializeObject(error);
+            var errorsBytes = Encoding.UTF8.GetBytes(serializedError);
+
+            var response = new ResponseDTO
+            {
+                Type = Enums.ResponseType.Error,
+                Data = errorsBytes,
+            };
+
+            var serializedResponse = JsonConvert.SerializeObject(response);
+            return Encoding.UTF8.GetBytes(serializedResponse);
         }
 
         private async Task<RequestDTO> GetRequest(HttpListenerRequest httpRequest)

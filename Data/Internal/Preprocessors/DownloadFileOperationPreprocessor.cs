@@ -3,6 +3,7 @@ using Data.Internal.Interfaces;
 using DomainEntities;
 using Newtonsoft.Json;
 using Server.DTOs;
+using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
 using Server.Enums;
 using System;
@@ -21,7 +22,8 @@ namespace Data.Internal.Preprocessors
 
         public byte[] Preprocess(FilePath request)
         {
-            var serializedFilePath = JsonConvert.SerializeObject(request);
+            var filePath = _mapper.Map<FilePathDTO>(request);
+            var serializedFilePath = JsonConvert.SerializeObject(filePath);
             var filePathBytes = Encoding.UTF8.GetBytes(serializedFilePath);
 
             var requestDTO = new RequestDTO
@@ -48,7 +50,7 @@ namespace Data.Internal.Preprocessors
             {
                 var serializedError = Encoding.UTF8.GetString(response.Data);
                 var error = JsonConvert.DeserializeObject<ErrorDTO>(serializedError);
-                throw new ErrorResponseMessageException(error.Message);
+                throw new ErrorResponseMessageException(error.Exception);
             }
             else
             {

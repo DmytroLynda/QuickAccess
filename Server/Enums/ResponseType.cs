@@ -4,6 +4,5 @@
     {
         Error,
         File,
-        Image
     }
 }

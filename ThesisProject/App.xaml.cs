@@ -4,6 +4,7 @@ using Data;
 using Microsoft.Extensions.DependencyInjection;
 using Server;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ThesisProject
@@ -13,10 +14,6 @@ namespace ThesisProject
     /// </summary>
     public partial class App : Application
     {
-        private IServiceProvider ServiceProvider { get; set; }
-        private IServer Server { get; set; }
-        private IFileService FileService { get; set; }
-
         private void ConfigureServices(IServiceCollection services)
         {
             //Data layer configuratin.
@@ -34,18 +31,18 @@ namespace ThesisProject
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
 
-            ServiceProvider = services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
-            Server = ServiceProvider.GetService<IServer>();
-            FileService = ServiceProvider.GetService<IFileService>();
-
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
+
+            var server = serviceProvider.GetService<IServer>();
+            await server.StartAsync("http://127.0.0.1:65432/");
         }
     }
 }

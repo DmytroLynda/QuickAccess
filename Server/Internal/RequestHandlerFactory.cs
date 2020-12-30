@@ -1,33 +1,48 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Server.Enums;
 using Server.Internal.Interfaces;
 using Server.Internal.RequestHandlers;
+using System.Linq;
 using System;
+using Server.Internal.Exceptions;
 
 namespace Server.Internal
 {
     internal class RequestHandlerFactory : IRequestHandlerFactory
     {
-        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<RequestHandlerFactory> _logger;
+        private readonly IServiceProvider _serviceProvider;
 
-        public RequestHandlerFactory(ILoggerFactory loggerFactory)
+        private const string requestHandlerEnd = "RequestHandler";
+
+        public RequestHandlerFactory(ILogger<RequestHandlerFactory> logger, IServiceProvider serviceProvider)
         {
-            _loggerFactory = loggerFactory;
-            _logger = _loggerFactory.CreateLogger<RequestHandlerFactory>();
+            _logger = logger;
+            _serviceProvider = serviceProvider;
         }
 
         public IRequestHandler Create(Query query)
         {
-            switch (query)
-            {
-                case Query.DownloadFile:
-                    var logger = _loggerFactory.CreateLogger<DownloadFileRequestHandler>();
-                    return new DownloadFileRequestHandler(logger);
+            var handlers = _serviceProvider.GetServices<IRequestHandler>();
+            var requiredHandler = handlers.FirstOrDefault(handler => handler.GetType().Name == query.ToString() + requestHandlerEnd);
 
-                default:
-                    throw new ArgumentException($"Unknown query: {query}.");
+            if (requiredHandler is null)
+            {
+                throw new RequiredRequestHandlerDoesNotExistException(query.ToString() + requestHandlerEnd);
             }
+
+            return requiredHandler;
+
+            //switch (query)
+            //{
+            //    case Query.DownloadFile:
+            //        var logger = _loggerFactory.CreateLogger<DownloadFileRequestHandler>();
+            //        return new DownloadFileRequestHandler(logger);
+
+            //    default:
+            //        throw new ArgumentException($"Unknown query: {query}.");
+            //}
         }
     }
 }
