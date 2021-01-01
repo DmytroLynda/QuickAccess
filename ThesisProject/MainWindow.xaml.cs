@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using ClientLogic;
-using Microsoft.Extensions.DependencyInjection;
+using ClientLogic.DataTypes;
+using Microsoft.Extensions.Options;
+using ThesisProject.Internal;
 
 namespace ThesisProject
 {
@@ -11,26 +15,53 @@ namespace ThesisProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IServiceProvider _services;
+        private readonly IFileService _fileService;
+        private readonly IDeviceService _deviceService;
+        private readonly MainWindowOptions _options;
 
-        public MainWindow(IServiceProvider services)
+        public MainWindow(IFileService fileService, IDeviceService deviceService, IOptions<MainWindowOptions> options)
         {
             InitializeComponent();
 
-            _services = services;
+            _fileService = fileService;
+            _deviceService = deviceService;
+            _options = options.Value;
 
             StartListenForDevices();
         }
 
         private void StartListenForDevices()
         {
-            var timer = new Timer();
+            var timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(_options.RefreshPeriod);
+            timer.Start();
+            timer.Tick += UpdateDevicesAsync;
+        }
+
+        private async void UpdateDevicesAsync(object sender, EventArgs e)
+        {
+            var devices = await _deviceService.GetDevices();
+            //TODO: Show existing devices for a user.
+            foreach (var device in devices)
+            {
+                DevicePanel.Children.Add(MakeDevice(device));
+            }
+        }
+
+        private UIElement MakeDevice(DeviceDTO device)
+        {
+            var button = new Button();
+            button.Width = 50;
+            button.Height = 50;
+            button.Content = device.Name;
+            button.FontSize = 8;
+
+            return button;
         }
 
         private async void ConfigurationButton_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var fileService = _services.GetRequiredService<IFileService>();
-            await fileService.DownloadFileAsync(new DomainEntities.Device { Id = 1, Name = "Dima" }, new DomainEntities.FilePath(@"C:\Users\Dmytro\Desktop\SSS.txt"));
+            await _fileService.DownloadFileAsync(new DomainEntities.Device { Id = 1, Name = "Dima" }, new DomainEntities.FilePath(@"C:\Users\Dmytro\Desktop\SSS.txt"));
         }
     }
 }

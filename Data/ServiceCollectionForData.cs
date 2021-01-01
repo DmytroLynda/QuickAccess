@@ -13,6 +13,7 @@ namespace Data
         public static void ConfigureForData(this IServiceCollection services)
         {
             services.AddSingleton<ITrackerService, TrackerServiceMock>();
+            services.AddSingleton<ITrackerContext, TrackerServiceMock>();
 
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();

@@ -20,7 +20,6 @@ namespace Data.Internal
             CreateMap<FilePath, FilePathDTO>().ForMember(value => value.Path, options => 
             {
                 options.MapFrom(src => src.Value);
-                options.DoNotAllowNull();
             });
         }
     }

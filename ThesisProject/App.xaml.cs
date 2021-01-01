@@ -25,15 +25,20 @@ namespace ThesisProject
             services.ConfigureForData();
 
             //Application layer configuration
-            services.ConfigureForServer(Configuration);
+            services.ConfigureForServer(Configuration.GetSection("HttpServer"));
             services.ConfigureForClientLogic();
 
             //UI layer configuration
-            services.ConfigureForUI();
+            services.ConfigureForUI(Configuration.GetSection("UI"));
 
             //External dependencies
             services.AddLogging();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper((configuration) => 
+            {
+                configuration.AllowNullDestinationValues = false;
+                configuration.AllowNullCollections = false;
+            },
+            AppDomain.CurrentDomain.GetAssemblies());
         }
 
         protected override async void OnStartup(StartupEventArgs e)

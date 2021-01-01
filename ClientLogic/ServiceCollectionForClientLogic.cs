@@ -8,6 +8,7 @@ namespace ClientLogic
         public static void ConfigureForClientLogic(this IServiceCollection services)
         {
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IDeviceService, DeviceService>();
         }
     }
 }

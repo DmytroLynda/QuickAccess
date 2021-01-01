@@ -8,11 +8,11 @@ namespace Server
 {
     public static class ServiceCollectionForServer
     {
-        public static void ConfigureForServer(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureForServer(this IServiceCollection services, IConfigurationSection configuration)
         {
             services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
 
-            services.Configure<HttpServerOptions>(configuration.GetSection("HttpServer"));
+            services.Configure<HttpServerOptions>(configuration);
             services.AddSingleton<IServer, HttpServer>();
 
             services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();

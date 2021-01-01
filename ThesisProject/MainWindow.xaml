@@ -39,7 +39,7 @@
                 </Border>
                 <Border Padding="0,0,10,0">
                     <Border CornerRadius="5" Background="#FFECECEC">
-                        <StackPanel Name="DevicePanel" Orientation="Horizontal" Width="150">
+                        <StackPanel Name="DevicePanel" Orientation="Vertical" Width="150">
 
                         </StackPanel>
                     </Border>
