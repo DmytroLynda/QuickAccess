@@ -4,6 +4,6 @@ namespace Server
 {
     public interface IServer
     {
-        Task StartAsync(string serverUri);
+        Task StartAsync();
     }
 }

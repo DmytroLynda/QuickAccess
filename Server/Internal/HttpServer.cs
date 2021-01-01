@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Server.DTOs;
 using Server.DTOs.ResponseTypes;
 using Server.Internal.Exceptions;
 using Server.Internal.Interfaces;
 using System;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -16,18 +18,20 @@ namespace Server.Internal
     {
         private readonly ILogger<HttpServer> _logger;
         private readonly IRequestHandlerFactory _requestHandlerFactory;
+        private readonly HttpServerOptions _options;
 
-        public HttpServer(ILogger<HttpServer> logger, IRequestHandlerFactory requestHandlerFactory)
+        public HttpServer(ILogger<HttpServer> logger, IRequestHandlerFactory requestHandlerFactory, IOptions<HttpServerOptions> options)
         {
             _logger = logger;
             _requestHandlerFactory = requestHandlerFactory;
+            _options = options.Value;
         }
 
-        public async Task StartAsync(string serverUri)
+        public async Task StartAsync()
         {
             Thread.CurrentThread.Name = "Server";
             var httpListener = new HttpListener();
-            httpListener.Prefixes.Add(serverUri);
+            _options.Prefixes.ToList().ForEach(prefix => httpListener.Prefixes.Add(prefix));
             httpListener.Start();
 
             while (true)
