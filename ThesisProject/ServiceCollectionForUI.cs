@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThesisProject.Internal;
+using ThesisProject.Internal.Containers;
+using ThesisProject.Internal.Interfaces;
+using ThesisProject.Internal.Windows;
 
 namespace ThesisProject
 {
@@ -15,6 +18,8 @@ namespace ThesisProject
         {
             services.Configure<MainWindowOptions>(configuration);
             services.AddScoped<MainWindow>();
+
+            services.AddSingleton<IDevicesContainer, DevicesContainer>();
         }
     }
 }

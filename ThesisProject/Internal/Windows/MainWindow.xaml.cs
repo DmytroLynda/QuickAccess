@@ -7,26 +7,34 @@ using ClientLogic;
 using ClientLogic.DataTypes;
 using Microsoft.Extensions.Options;
 using ThesisProject.Internal;
+using ThesisProject.Internal.Interfaces;
 
-namespace ThesisProject
+namespace ThesisProject.Internal.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    internal partial class MainWindow : Window
     {
         private readonly IFileService _fileService;
         private readonly IDeviceService _deviceService;
+        private readonly IDevicesContainer _devicesContainer;
         private readonly MainWindowOptions _options;
 
-        public MainWindow(IFileService fileService, IDeviceService deviceService, IOptions<MainWindowOptions> options)
+        public MainWindow(
+            IFileService fileService,
+            IDeviceService deviceService, 
+            IDevicesContainer devicesContainer,
+            IOptions<MainWindowOptions> options)
         {
             InitializeComponent();
 
             _fileService = fileService;
             _deviceService = deviceService;
+            _devicesContainer = devicesContainer;
             _options = options.Value;
 
+            _devicesContainer.Initialize(DevicePanel.Children);
             StartListenForDevices();
         }
 
@@ -41,23 +49,8 @@ namespace ThesisProject
         private async void UpdateDevicesAsync(object sender, EventArgs e)
         {
             var devices = await _deviceService.GetDevices();
-            //TODO: Show existing devices for a user.
-            DevicePanel.Children.Clear();
-            foreach (var device in devices)
-            {
-                DevicePanel.Children.Add(MakeDevice(device));
-            }
-        }
 
-        private UIElement MakeDevice(DeviceDTO device)
-        {
-            var button = new Button();
-            button.Width = 50;
-            button.Height = 50;
-            button.Content = device.Name;
-            button.FontSize = 8;
-
-            return button;
+            _devicesContainer.Show(devices);
         }
 
         private async void ConfigurationButton_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

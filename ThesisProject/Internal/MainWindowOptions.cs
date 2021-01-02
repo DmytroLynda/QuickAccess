@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThesisProject.Internal
 {
-    public class MainWindowOptions
+    internal class MainWindowOptions
     {
         public int RefreshPeriod { get; set; }
     }
