@@ -32,16 +32,6 @@ namespace Server.Internal
             }
 
             return requiredHandler;
-
-            //switch (query)
-            //{
-            //    case Query.DownloadFile:
-            //        var logger = _loggerFactory.CreateLogger<DownloadFileRequestHandler>();
-            //        return new DownloadFileRequestHandler(logger);
-
-            //    default:
-            //        throw new ArgumentException($"Unknown query: {query}.");
-            //}
         }
     }
 }
