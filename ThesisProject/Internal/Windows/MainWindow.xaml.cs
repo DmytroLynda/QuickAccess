@@ -40,6 +40,8 @@ namespace ThesisProject.Internal.Windows
             _menuUpdater.Start();
 
             await UpdateMenuAsync();
+
+            base.OnInitialized(e);
         }
 
         private async void OnDeviceWasSelectedAsync(object sender, DeviceViewModel device)

@@ -44,7 +44,7 @@
                     </Border>
                 </Border>
                 <Border DockPanel.Dock="Right" CornerRadius="5" Background="#FFECECEC">
-                    <WrapPanel Name="FilesPanel">
+                    <WrapPanel Name="FilesPanel" Margin="5,0,0,0">
 
                     </WrapPanel>
                 </Border>

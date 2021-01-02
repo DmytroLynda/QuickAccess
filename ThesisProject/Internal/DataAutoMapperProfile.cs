@@ -9,6 +9,12 @@ namespace ThesisProject.Internal
         public DataAutoMapperProfile()
         {
             CreateMap<Device, DeviceViewModel>();
+            CreateMap<DeviceViewModel, Device>().ForMember(member => member.Id, options => options.AllowNull());
+
+            CreateMap<DirectoryPath, DirectoryPathViewModel>().ForMember(member => member.Path, options => options.MapFrom(src => src.Value));
+            CreateMap<DirectoryPathViewModel, DirectoryPath>().ForMember(memver => memver.Value, options => options.MapFrom(src => src.Path));
+
+            CreateMap<Path, PathViewModel>();
         }
     }
 }

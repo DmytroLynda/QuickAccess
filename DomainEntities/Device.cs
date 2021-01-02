@@ -4,7 +4,7 @@ namespace DomainEntities
 {
     public class Device : IEquatable<Device>
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
 
         public override bool Equals(object obj)
@@ -15,13 +15,12 @@ namespace DomainEntities
         public bool Equals(Device other)
         {
             return other != null &&
-                   Id == other.Id &&
                    Name == other.Name;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Name);
+            return HashCode.Combine(Name);
         }
 
         public override string ToString()

@@ -12,7 +12,7 @@ namespace ThesisProject.Internal.Containers
     {
         private List<(Button button, DeviceViewModel device)> DevicesButtons { get; set;}
 
-        private UIElementCollection ContainerElements { get; set; }
+        private UIElementCollection UIElements { get; set; }
 
         private Button SelectedDevice { get; set; }
 
@@ -24,9 +24,9 @@ namespace ThesisProject.Internal.Containers
         }
 
 
-        public void Initialize(UIElementCollection containerElements)
+        public void Initialize(UIElementCollection uiElements)
         {
-            ContainerElements = containerElements ?? throw new ArgumentNullException(nameof(containerElements));
+            UIElements = uiElements ?? throw new ArgumentNullException(nameof(uiElements));
         }
 
         public void Show(IEnumerable<DeviceViewModel> devices)
@@ -38,8 +38,8 @@ namespace ThesisProject.Internal.Containers
             DevicesButtons.AddRange(newDevices.Select(newDevice => (MakeDeviceButton(newDevice), newDevice)));
             DevicesButtons = DevicesButtons.OrderBy(deviceButton => deviceButton.device.Name).ToList();
 
-            ContainerElements.Clear();
-            DevicesButtons.ToList().ForEach(deviceButton => ContainerElements.Add(deviceButton.button));
+            UIElements.Clear();
+            DevicesButtons.ToList().ForEach(deviceButton => UIElements.Add(deviceButton.button));
         }
 
         public DeviceViewModel GetSelectedDevice()
