@@ -33,7 +33,7 @@ namespace ThesisProject
         private void StartListenForDevices()
         {
             var timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(_options.RefreshPeriod);
+            timer.Interval = TimeSpan.FromSeconds(_options.RefreshPeriod);
             timer.Start();
             timer.Tick += UpdateDevicesAsync;
         }
@@ -42,6 +42,7 @@ namespace ThesisProject
         {
             var devices = await _deviceService.GetDevices();
             //TODO: Show existing devices for a user.
+            DevicePanel.Children.Clear();
             foreach (var device in devices)
             {
                 DevicePanel.Children.Add(MakeDevice(device));
