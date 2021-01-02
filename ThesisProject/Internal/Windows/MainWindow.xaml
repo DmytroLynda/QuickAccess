@@ -26,32 +26,28 @@
                 </StackPanel>
             </DockPanel>
         </Border>
-        <Border Padding="10">
-            <DockPanel  Name="MainPanel">
+            <DockPanel  Name="MainPanel" Margin="10">
                 <Border Padding="0,0,10,0" DockPanel.Dock="Left">
                     <Border CornerRadius="5" Background="#FFECECEC">
                         <StackPanel Name="SidebarPanel" Orientation="Vertical"  Width="200" >
                         <Button Margin="5" Name="AddDeviceButton" Content="Add new device" Height="40" FontSize="16"></Button>
                         <Button Margin="5,0,5,5" Name="RemoveDeviceButton" Content="Remove device" Height="40" FontSize="16"></Button>
-                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16" MouseDoubleClick="ConfigurationButton_MouseDoubleClick"></Button>
+                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"></Button>
                         </StackPanel>
                     </Border>
                 </Border>
                 <Border Padding="0,0,10,0">
-                    <Border Margin="5" CornerRadius="5" Background="#FFECECEC">
-                        <Border Padding="5">
-                            <ScrollViewer>
-                                <StackPanel CanHorizontallyScroll="true" Name="DevicePanel" Orientation="Vertical" Width="150"></StackPanel>
+                    <Border CornerRadius="5" Background="#FFECECEC">
+                            <ScrollViewer Margin="5">
+                                <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"></StackPanel>
                             </ScrollViewer>
-                        </Border>
                     </Border>
                 </Border>
                 <Border DockPanel.Dock="Right" CornerRadius="5" Background="#FFECECEC">
-                    <WrapPanel Name="ContentPanel">
+                    <WrapPanel Name="FilesPanel">
 
                     </WrapPanel>
                 </Border>
             </DockPanel>
-        </Border>
     </DockPanel>
 </Window>

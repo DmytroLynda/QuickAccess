@@ -1,18 +1,20 @@
-﻿using ClientLogic.DataTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Interfaces
 {
     internal interface IDevicesContainer
     {
         void Initialize(UIElementCollection containerElements);
-        void Show(IEnumerable<DeviceDTO> devices);
+
+        void Show(IEnumerable<DeviceViewModel> devices);
+
         bool IsSelectedDevice();
-        DeviceDTO GetSelectedDevice();
+
+        DeviceViewModel GetSelectedDevice();
+
+        event EventHandler<DeviceViewModel> DeviceWasSelected;
     }
 }

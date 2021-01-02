@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ClientLogic.DataTypes
+namespace ThesisProject.Internal.ViewModels
 {
-    public class DeviceDTO
+    public class DeviceViewModel
     {
         public string Name { get; set; }
 
         #region Overrides
         public override bool Equals(object obj)
         {
-            return obj is DeviceDTO dTO &&
+            return obj is DeviceViewModel dTO &&
                    Name == dTO.Name;
         }
 
@@ -27,12 +24,12 @@ namespace ClientLogic.DataTypes
             return Name;
         }
 
-        public static bool operator ==(DeviceDTO left, DeviceDTO right)
+        public static bool operator ==(DeviceViewModel left, DeviceViewModel right)
         {
-            return EqualityComparer<DeviceDTO>.Default.Equals(left, right);
+            return EqualityComparer<DeviceViewModel>.Default.Equals(left, right);
         }
 
-        public static bool operator !=(DeviceDTO left, DeviceDTO right)
+        public static bool operator !=(DeviceViewModel left, DeviceViewModel right)
         {
             return !(left == right);
         }

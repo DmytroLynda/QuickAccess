@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Server;
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using ThesisProject.Internal.Windows;
 

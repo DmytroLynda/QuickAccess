@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using ClientLogic.DataTypes;
-using ClientLogic.ExternalInterfaces;
-using System;
+﻿using ClientLogic.ExternalInterfaces;
+using DomainEntities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ClientLogic.Internal
@@ -12,18 +8,15 @@ namespace ClientLogic.Internal
     internal class DeviceService : IDeviceService
     {
         private readonly ITrackerContext _trackerContext;
-        private readonly IMapper _mapper;
 
-        public DeviceService(ITrackerContext trackerContext, IMapper mapper)
+        public DeviceService(ITrackerContext trackerContext)
         {
             _trackerContext = trackerContext;
-            _mapper = mapper;
         }
 
-        public async Task<List<DeviceDTO>> GetDevices()
+        public async Task<List<Device>> GetDevicesAsync()
         {
-            var devices = await _trackerContext.GetDevicesAsync();
-            return _mapper.Map<List<DeviceDTO>>(devices);
+            return await _trackerContext.GetDevicesAsync();
         }
     }
 }

@@ -2,11 +2,6 @@
 using DomainEntities;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Internal
 {

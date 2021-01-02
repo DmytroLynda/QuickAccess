@@ -4,7 +4,6 @@ using Data.Internal.Interfaces;
 using Data.Internal.Preprocessors;
 using DomainEntities;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 
 namespace Data
 {

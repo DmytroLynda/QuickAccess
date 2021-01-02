@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using Data.Internal.Interfaces;
-using Data.Internal.Preprocessors;
-using DomainEntities;
+﻿using Data.Internal.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Data
 {

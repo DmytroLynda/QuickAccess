@@ -45,9 +45,21 @@ namespace Data.Internal
             throw new NotImplementedException();
         }
 
-        public Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
+        public async Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
         {
-            throw new NotImplementedException();
+            #warning Mock implementation
+            return await Task.FromResult(new List<Path>
+            {
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blabla"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\sdsa"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blablawe"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234zxc"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\asd"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blablabnv"),
+                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234jhgk"),
+            });
         }
     }
 }

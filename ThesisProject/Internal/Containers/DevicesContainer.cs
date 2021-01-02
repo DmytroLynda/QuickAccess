@@ -1,35 +1,35 @@
-﻿using ClientLogic.DataTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using ThesisProject.Internal.Interfaces;
+using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Containers
 {
     internal class DevicesContainer : IDevicesContainer
     {
-        private List<(Button button, DeviceDTO device)> DevicesButtons { get; set;}
+        private List<(Button button, DeviceViewModel device)> DevicesButtons { get; set;}
 
         private UIElementCollection ContainerElements { get; set; }
 
         private Button SelectedDevice { get; set; }
 
+        public event EventHandler<DeviceViewModel> DeviceWasSelected;
+
         public DevicesContainer()
         {
-            DevicesButtons = new List<(Button button, DeviceDTO device)>();
+            DevicesButtons = new List<(Button button, DeviceViewModel device)>();
         }
+
 
         public void Initialize(UIElementCollection containerElements)
         {
             ContainerElements = containerElements ?? throw new ArgumentNullException(nameof(containerElements));
         }
 
-        public void Show(IEnumerable<DeviceDTO> devices)
+        public void Show(IEnumerable<DeviceViewModel> devices)
         {
             DevicesButtons.RemoveAll(deviceButton => !devices.Contains(deviceButton.device));
             
@@ -42,7 +42,7 @@ namespace ThesisProject.Internal.Containers
             DevicesButtons.ToList().ForEach(deviceButton => ContainerElements.Add(deviceButton.button));
         }
 
-        public DeviceDTO GetSelectedDevice()
+        public DeviceViewModel GetSelectedDevice()
         {
             if (!IsSelectedDevice())
             {
@@ -57,7 +57,7 @@ namespace ThesisProject.Internal.Containers
             return SelectedDevice is not null;
         }
 
-        private Button MakeDeviceButton(DeviceDTO device)
+        private Button MakeDeviceButton(DeviceViewModel device)
         {
             var devicesButton = new Button
             {
@@ -66,12 +66,12 @@ namespace ThesisProject.Internal.Containers
                 Margin = new Thickness(0, 0, 0, 5),
             };
 
-            devicesButton.Click +=  DeviceSelected;
+            devicesButton.Click +=  OnDeviceSelect;
 
             return devicesButton;
         }
 
-        private void DeviceSelected(object sender, RoutedEventArgs e)
+        private void OnDeviceSelect(object sender, RoutedEventArgs e)
         {
             //Unselect previous device and select selected.
             if (SelectedDevice is not null)
@@ -81,7 +81,8 @@ namespace ThesisProject.Internal.Containers
 
             SelectedDevice = sender as Button;
             SelectedDevice.IsEnabled = false;
-        }
 
+            DeviceWasSelected(this, DevicesButtons.First(deviceButton => deviceButton.button == SelectedDevice).device);
+        }
     }
 }

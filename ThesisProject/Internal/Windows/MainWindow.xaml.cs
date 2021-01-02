@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Timers;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using ClientLogic;
-using ClientLogic.DataTypes;
-using Microsoft.Extensions.Options;
-using ThesisProject.Internal;
 using ThesisProject.Internal.Interfaces;
+using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Windows
 {
@@ -16,46 +11,72 @@ namespace ThesisProject.Internal.Windows
     /// </summary>
     internal partial class MainWindow : Window
     {
-        private readonly IFileService _fileService;
-        private readonly IDeviceService _deviceService;
+        private readonly IMainWindowController _controller;
+
+        private readonly IMenuUpdater _menuUpdater;
+
+        private readonly IFilesContainer _filesContainer;
         private readonly IDevicesContainer _devicesContainer;
-        private readonly MainWindowOptions _options;
 
-        public MainWindow(
-            IFileService fileService,
-            IDeviceService deviceService, 
-            IDevicesContainer devicesContainer,
-            IOptions<MainWindowOptions> options)
+        public MainWindow(IMainWindowController controller, IMenuUpdater menuUpdater, IFilesContainer filesContainer, IDevicesContainer devicesContainer)
         {
-            InitializeComponent();
+            _controller = controller;
+            _menuUpdater = menuUpdater;
 
-            _fileService = fileService;
-            _deviceService = deviceService;
+            _filesContainer = filesContainer;
+
             _devicesContainer = devicesContainer;
-            _options = options.Value;
+            _devicesContainer.DeviceWasSelected += OnDeviceWasSelectedAsync;
 
-            _devicesContainer.Initialize(DevicePanel.Children);
-            StartListenForDevices();
+            _menuUpdater.Update += OnUpdateMenuAsync;
+
+            InitializeComponent();
         }
 
-        private void StartListenForDevices()
+        protected async override void OnInitialized(EventArgs e)
         {
-            var timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(_options.RefreshPeriod);
-            timer.Start();
-            timer.Tick += UpdateDevicesAsync;
+            _filesContainer.Initialize(FilesPanel.Children);
+            _devicesContainer.Initialize(DevicesPanel.Children);
+            _menuUpdater.Start();
+
+            await UpdateMenuAsync();
         }
 
-        private async void UpdateDevicesAsync(object sender, EventArgs e)
+        private async void OnDeviceWasSelectedAsync(object sender, DeviceViewModel device)
         {
-            var devices = await _deviceService.GetDevices();
-
-            _devicesContainer.Show(devices);
+            await UpdateFilesMenuAsync(device);
         }
 
-        private async void ConfigurationButton_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void OnUpdateMenuAsync(object sender, EventArgs e)
         {
-            await _fileService.DownloadFileAsync(new DomainEntities.Device { Id = 1, Name = "Dima" }, new DomainEntities.FilePath(@"C:\Users\Dmytro\Desktop\SSS.txt"));
+            await UpdateMenuAsync();
+        }
+
+        private async Task UpdateMenuAsync()
+        {
+            _devicesContainer.Show(await _controller.GetDevicesAsync());
+
+            if (_devicesContainer.IsSelectedDevice())
+            {
+                await UpdateFilesMenuAsync(_devicesContainer.GetSelectedDevice());
+            }
+        }
+
+        private async Task UpdateFilesMenuAsync(DeviceViewModel device)
+        {
+            DirectoryPathViewModel directory;
+            if (device == _filesContainer.Device)
+            {
+                directory = _filesContainer.Directory;
+            }
+            else
+            {
+                directory = DirectoryPathViewModel.Root;
+            }
+            
+            _filesContainer.Device = device;
+            _filesContainer.Directory = directory;
+            _filesContainer.Show(await _controller.GetDirectoryAsync(directory, device));
         }
     }
 }
