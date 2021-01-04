@@ -2,6 +2,8 @@
 using DomainEntities;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
+using System;
+using System.Linq;
 
 namespace Data.Internal
 {
@@ -9,13 +11,27 @@ namespace Data.Internal
     {
         public DataAutoMapperProfile()
         {
-            CreateMap<File, FileDTO>();
+            CreateMap<FilePath, FilePathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
+
             CreateMap<FileDTO, File>();
 
-            CreateMap<FilePath, FilePathDTO>().ForMember(value => value.Path, options => 
+            CreateMap<FileInfoDTO, FileInfo>();
+
+            CreateMap<DirectoryPath, DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
+
+            CreateMap<PathDTO, Path>().ConvertUsing(pathDTO => MapToPath(pathDTO));
+        }
+
+        private Path MapToPath(PathDTO pathDTO)
+        {
+            if (System.IO.Path.HasExtension(pathDTO.Value))
             {
-                options.MapFrom(src => src.Value);
-            });
+                return new FilePath(pathDTO.Value);
+            }
+            else
+            {
+                return new DirectoryPath(pathDTO.Value);
+            }
         }
     }
 }

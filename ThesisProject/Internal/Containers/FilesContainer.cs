@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ThesisProject.Internal.Interfaces;
 using ThesisProject.Internal.ViewModels;
 
@@ -14,10 +13,18 @@ namespace ThesisProject.Internal.Containers
     internal class FilesContainer : IFilesContainer
     {
         private UIElementCollection UIElements { get; set; }
+        private List<(Button button, PathViewModel path)> ButtonPatches { get; set; }
         private Button SelectedPathButton { get; set;}
 
-        public DeviceViewModel Device { get; set; }
-        public DirectoryPathViewModel Directory { get; set; }
+        public DeviceViewModel CurentDevice { get; set; }
+        public DirectoryPathViewModel CurentDirectory { get; set; }
+
+        public event EventHandler<DirectoryPathViewModel> OpenDirectory;
+
+        public FilesContainer()
+        {
+            ButtonPatches = new List<(Button button, PathViewModel path)>();
+        }
 
         public void Initialize(UIElementCollection uiElements)
         {
@@ -26,19 +33,21 @@ namespace ThesisProject.Internal.Containers
 
         public void Show(List<PathViewModel> pathes)
         {
-            UIElements.Clear();
-
+            ButtonPatches.Clear();
             foreach (var path in pathes)
             {
                 if (Path.HasExtension(path.Value))
                 {
-                    UIElements.Add(MakeFileButton(path));
+                    ButtonPatches.Add((MakeFileButton(path), path));
                 }
                 else
                 {
-                    UIElements.Add(MakeFolderButton(path));
+                    ButtonPatches.Add((MakeFolderButton(path), path));
                 }
             }
+
+            UIElements.Clear();
+            ButtonPatches.ForEach(buttonPath => UIElements.Add(buttonPath.button));
         }
 
         private Button MakeFolderButton(PathViewModel path)
@@ -51,18 +60,14 @@ namespace ThesisProject.Internal.Containers
                 Content = Path.GetDirectoryName(path.Value),
             };
 
-            folderButton.Click += ElementSelected;
+            folderButton.MouseDoubleClick += OnFolderOpen;
             return folderButton;
         }
 
-        private void ElementSelected(object sender, RoutedEventArgs e)
+        private void OnFolderOpen(object sender, MouseButtonEventArgs e)
         {
-            if (SelectedPathButton is not null)
-            {
-                SelectedPathButton.IsEnabled = true;
-            }
-
-            SelectedPathButton = sender as Button;
+            var path = ButtonPatches.First(buttonPath => buttonPath.button == sender as Button).path;
+            OpenDirectory(this, new DirectoryPathViewModel { Path = path.Value });
         }
 
         private Button MakeFileButton(PathViewModel path)
@@ -77,6 +82,18 @@ namespace ThesisProject.Internal.Containers
 
             folderButton.Click += ElementSelected;
             return folderButton;
+        }
+
+        private void ElementSelected(object sender, RoutedEventArgs e)
+        {
+            if (SelectedPathButton is not null)
+            {
+                SelectedPathButton.IsEnabled = true;
+            }
+
+
+            SelectedPathButton = sender as Button;
+            SelectedPathButton.IsEnabled = false;
         }
     }
 }

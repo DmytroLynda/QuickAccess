@@ -28,7 +28,7 @@ namespace Server.Internal
 
             if (requiredHandler is null)
             {
-                throw new RequiredRequestHandlerDoesNotExistException(query.ToString() + requestHandlerEnd);
+                throw new RequestHandlerDoesNotExistException(query.ToString() + requestHandlerEnd);
             }
 
             return requiredHandler;

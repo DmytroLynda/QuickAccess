@@ -55,6 +55,7 @@ namespace ThesisProject
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
 
+            #warning Can be problem with catching erors from the server
             var server = ServiceProvider.GetService<IServer>();
             await server.StartAsync();
         }

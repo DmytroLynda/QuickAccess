@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Server.Internal;
 using Server.Internal.Interfaces;
 using Server.Internal.RequestHandlers;
+using Server.Internal.Services;
 
 namespace Server
 {
@@ -10,13 +11,15 @@ namespace Server
     {
         public static void ConfigureForServer(this IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
-
             services.Configure<HttpServerOptions>(configuration);
             services.AddSingleton<IServer, HttpServer>();
 
-            services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
+            services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
+
+            services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();
+            services.AddScoped<IRequestHandler, OpenFolderRequestHandler>();
         }
     }
 }

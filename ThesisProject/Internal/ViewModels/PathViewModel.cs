@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThesisProject.Internal.ViewModels
+﻿namespace ThesisProject.Internal.ViewModels
 {
     public class PathViewModel
     {

@@ -26,10 +26,25 @@ namespace Data.Internal
 
         public async Task<File> DownloadFileAsync(FilePath file)
         {
-            var preprocessor = _preprocessorFactory.Create<FilePath, File>();
+            return await HttpPostAsync<FilePath, File>(file);
+        }
 
-            var request = preprocessor.Preprocess(file);
-            var requestContent = new ByteArrayContent(request);
+        public async Task<FileInfo> GetFileInfoAsync(FilePath file)
+        {
+            return await HttpPostAsync<FilePath, FileInfo>(file);
+        }
+
+        public async Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
+        {
+            return await HttpPostAsync<DirectoryPath, List<Path>>(folder);
+        }
+
+        private async Task<TResponse> HttpPostAsync<TRequest, TResponse>(TRequest request)
+        {
+            var preprocessor = _preprocessorFactory.Create<TRequest, TResponse>();
+
+            var preprocessedRequest = preprocessor.Preprocess(request);
+            var requestContent = new ByteArrayContent(preprocessedRequest);
 
             using var httpClient = new HttpClient();
             var httpResponse = await httpClient.PostAsync(_deviceAddress, requestContent);
@@ -38,28 +53,6 @@ namespace Data.Internal
             var response = await httpResponse.Content.ReadAsByteArrayAsync();
 
             return preprocessor.Preprocess(response);
-        }
-
-        public Task<FileInfo> GetFileInfoAsync(FilePath file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Path>> OpenFolderAsync(DirectoryPath folder)
-        {
-            #warning Mock implementation
-            return await Task.FromResult(new List<Path>
-            {
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blabla"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\sdsa"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blablawe"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234zxc"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\asd"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\Blablabnv"),
-                new DirectoryPath(@"C:\Users\Dmytro\Desktop\Dyplom\1234jhgk"),
-            });
         }
     }
 }

@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Internal
@@ -18,18 +17,28 @@ namespace Server.Internal
     {
         private readonly ILogger<HttpServer> _logger;
         private readonly IRequestHandlerFactory _requestHandlerFactory;
+        private readonly IAuthenticationService _authenticationService;
         private readonly HttpServerOptions _options;
 
-        public HttpServer(ILogger<HttpServer> logger, IRequestHandlerFactory requestHandlerFactory, IOptions<HttpServerOptions> options)
+        public HttpServer(
+            ILogger<HttpServer> logger,
+            IRequestHandlerFactory requestHandlerFactory,
+            IAuthenticationService authenticationService,
+            IOptions<HttpServerOptions> options)
         {
             _logger = logger;
             _requestHandlerFactory = requestHandlerFactory;
+            _authenticationService = authenticationService;
             _options = options.Value;
+        }
+
+        public void Start()
+        {
+            StartAsync().Wait();
         }
 
         public async Task StartAsync()
         {
-            Thread.CurrentThread.Name = "Server";
             var httpListener = new HttpListener();
             _options.Prefixes.ToList().ForEach(prefix => httpListener.Prefixes.Add(prefix));
             httpListener.Start();
@@ -53,18 +62,20 @@ namespace Server.Internal
         {
             var httpRequest = incomingContext.Request;
 
-            var request = await GetRequest(httpRequest);
-            
             byte[] response;
             try
             { 
+                var requesterEndPoint = incomingContext.Request.RemoteEndPoint;
+                _authenticationService.Authenticate(requesterEndPoint);
+
+                var request = await GetRequest(httpRequest);
+            
                 var requestHandler = _requestHandlerFactory.Create(request.Query);
-                response = await requestHandler.HandleAsync(request.Request);
+                response = await requestHandler.HandleAsync(request.Data);
             }
             catch (Exception ex)
             {
-                var serverException = new ServerException(ex);
-                response = FormErrorResponse(serverException);
+                response = FormErrorResponse(new ServerException(ex));
             }
 
             using var httpResponse = incomingContext.Response;

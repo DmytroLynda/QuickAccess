@@ -4,5 +4,6 @@
     {
         Error,
         File,
+        Folder
     }
 }

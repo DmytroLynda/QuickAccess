@@ -2,6 +2,7 @@
 {
     public enum Query
     {
-        DownloadFile
+        DownloadFile,
+        OpenFolder
     }
 }

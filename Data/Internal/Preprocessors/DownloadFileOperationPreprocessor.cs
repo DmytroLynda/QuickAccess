@@ -1,61 +1,25 @@
 ﻿using AutoMapper;
-using Data.Internal.Interfaces;
 using DomainEntities;
-using Newtonsoft.Json;
-using Server.DTOs;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
 using Server.Enums;
-using System;
-using System.Text;
 
 namespace Data.Internal.Preprocessors
 {
-    internal class DownloadFileOperationPreprocessor : IOperationPreprocessor<FilePath, File>
+    internal class DownloadFileOperationPreprocessor : OperationPreprocessor<FilePath, File>
     {
-        private readonly IMapper _mapper;
-
         public DownloadFileOperationPreprocessor(IMapper mapper)
+            :base(mapper)
+        { }
+
+        public override byte[] Preprocess(FilePath request)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            return Preprocess<FilePathDTO>(request, Query.DownloadFile);
         }
 
-        public byte[] Preprocess(FilePath request)
+        public override File Preprocess(byte[] responseBytes)
         {
-            var filePath = _mapper.Map<FilePathDTO>(request);
-            var serializedFilePath = JsonConvert.SerializeObject(filePath);
-            var filePathBytes = Encoding.UTF8.GetBytes(serializedFilePath);
-
-            var requestDTO = new RequestDTO
-            {
-                Query = Query.DownloadFile,
-                Request = filePathBytes
-            };
-            var serializedRequestDTO = JsonConvert.SerializeObject(requestDTO);
-            return Encoding.UTF8.GetBytes(serializedRequestDTO);
-        }
-
-        public File Preprocess(byte[] responseBytes)
-        {
-            var serializedResponse = Encoding.UTF8.GetString(responseBytes);
-            var response = JsonConvert.DeserializeObject<ResponseDTO>(serializedResponse);
-
-            if (response.Type == ResponseType.File)
-            {
-                var serializedData = Encoding.UTF8.GetString(response.Data);
-                var data = JsonConvert.DeserializeObject<FileDTO>(serializedData);
-                return _mapper.Map<File>(data);
-            }
-            else if (response.Type == ResponseType.Error)
-            {
-                var serializedError = Encoding.UTF8.GetString(response.Data);
-                var error = JsonConvert.DeserializeObject<ErrorDTO>(serializedError);
-                throw new ErrorResponseMessageException(error.Exception);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown response type: {response.Type}");
-            }
+           return Preprocess<FileDTO>(responseBytes, ResponseType.File);
         }
     }
 }

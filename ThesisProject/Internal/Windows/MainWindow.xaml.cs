@@ -24,6 +24,7 @@ namespace ThesisProject.Internal.Windows
             _menuUpdater = menuUpdater;
 
             _filesContainer = filesContainer;
+            _filesContainer.OpenDirectory += OnOpenDirectoryAsync;
 
             _devicesContainer = devicesContainer;
             _devicesContainer.DeviceWasSelected += OnDeviceWasSelectedAsync;
@@ -32,6 +33,7 @@ namespace ThesisProject.Internal.Windows
 
             InitializeComponent();
         }
+
 
         protected async override void OnInitialized(EventArgs e)
         {
@@ -42,6 +44,11 @@ namespace ThesisProject.Internal.Windows
             await UpdateMenuAsync();
 
             base.OnInitialized(e);
+        }
+
+        private async void OnOpenDirectoryAsync(object sender, DirectoryPathViewModel directory)
+        {
+            await UpdateFilesMenuAsync(_filesContainer.CurentDevice, directory);
         }
 
         private async void OnDeviceWasSelectedAsync(object sender, DeviceViewModel device)
@@ -67,17 +74,22 @@ namespace ThesisProject.Internal.Windows
         private async Task UpdateFilesMenuAsync(DeviceViewModel device)
         {
             DirectoryPathViewModel directory;
-            if (device == _filesContainer.Device)
+            if (device == _filesContainer.CurentDevice)
             {
-                directory = _filesContainer.Directory;
+                directory = _filesContainer.CurentDirectory;
             }
             else
             {
                 directory = DirectoryPathViewModel.Root;
             }
             
-            _filesContainer.Device = device;
-            _filesContainer.Directory = directory;
+            await UpdateFilesMenuAsync(device, directory);
+        }
+
+        private async Task UpdateFilesMenuAsync(DeviceViewModel device, DirectoryPathViewModel directory)
+        {
+            _filesContainer.CurentDevice = device;
+            _filesContainer.CurentDirectory = directory;
             _filesContainer.Show(await _controller.GetDirectoryAsync(directory, device));
         }
     }

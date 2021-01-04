@@ -1,16 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Server.DTOs;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
 using Server.Enums;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.Internal.RequestHandlers
 {
-    internal class DownloadFileRequestHandler : IRequestHandler
+    internal class DownloadFileRequestHandler : RequestHandler
     {
         private readonly ILogger<DownloadFileRequestHandler> _logger;
 
@@ -19,10 +16,9 @@ namespace Server.Internal.RequestHandlers
             _logger = logger;
         }
 
-        public async Task<byte[]> HandleAsync(byte[] requestData)
+        public override async Task<byte[]> HandleAsync(byte[] requestData)
         {
-            var serializedRequest = Encoding.UTF8.GetString(requestData);
-            var request = JsonConvert.DeserializeObject<FilePathDTO>(serializedRequest);
+            var request = DeserializeRequest<FilePathDTO>(requestData);
 
             var fileInfo = new FileInfo(request.Path);
             if (fileInfo.Exists)
@@ -32,8 +28,8 @@ namespace Server.Internal.RequestHandlers
                     Body = await GetFileAsync(fileInfo),
                     ShortFileName = Path.GetFileName(request.Path),
                 };
-                var serializedResponse = JsonConvert.SerializeObject(response);
-                return FormResponse(ResponseType.File, Encoding.UTF8.GetBytes(serializedResponse));
+
+                return FormResponse(response, ResponseType.File);
             }
             else
             {
@@ -49,18 +45,6 @@ namespace Server.Internal.RequestHandlers
             await fileStream.ReadAsync(fileBytes);
 
             return fileBytes;
-        }
-
-        private byte[] FormResponse(ResponseType type, byte[] response)
-        {
-            var responseDTO = new ResponseDTO
-            {
-                Type = type,
-                Data = response
-            };
-
-            var serializedResponse = JsonConvert.SerializeObject(responseDTO);
-            return Encoding.UTF8.GetBytes(serializedResponse);
         }
     }
 }
