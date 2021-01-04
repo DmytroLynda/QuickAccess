@@ -15,6 +15,6 @@ namespace ThesisProject.Internal.Interfaces
 
         DeviceViewModel GetSelectedDevice();
 
-        event EventHandler<DeviceViewModel> DeviceWasSelected;
+        event EventHandler<DeviceViewModel> SelectDevice;
     }
 }

@@ -15,6 +15,8 @@ namespace ThesisProject
             services.Configure<MenuUpdaterOptions>(configuration);
             services.AddScoped<MainWindow>();
 
+            services.AddScoped<FileInfoWindow>();
+
             services.AddScoped<IMenuUpdater, MenuUpdater>();
 
             services.AddSingleton<IDevicesContainer, DevicesContainer>();

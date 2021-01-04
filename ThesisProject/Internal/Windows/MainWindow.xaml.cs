@@ -18,22 +18,39 @@ namespace ThesisProject.Internal.Windows
         private readonly IFilesContainer _filesContainer;
         private readonly IDevicesContainer _devicesContainer;
 
-        public MainWindow(IMainWindowController controller, IMenuUpdater menuUpdater, IFilesContainer filesContainer, IDevicesContainer devicesContainer)
+        private readonly FileInfoWindow _fileInfoWindow;
+
+        public MainWindow(IMainWindowController controller, IMenuUpdater menuUpdater, IFilesContainer filesContainer, IDevicesContainer devicesContainer, FileInfoWindow fileInfoWindow)
         {
             _controller = controller;
             _menuUpdater = menuUpdater;
+            _fileInfoWindow = fileInfoWindow;
 
             _filesContainer = filesContainer;
             _filesContainer.OpenDirectory += OnOpenDirectoryAsync;
+            _filesContainer.DownloadFile += OnDownloadFileAsync;
+            _filesContainer.FileInfo += OnFileInfoAsync;
 
             _devicesContainer = devicesContainer;
-            _devicesContainer.DeviceWasSelected += OnDeviceWasSelectedAsync;
+            _devicesContainer.SelectDevice += OnDeviceWasSelectedAsync;
 
             _menuUpdater.Update += OnUpdateMenuAsync;
 
             InitializeComponent();
         }
 
+        private async void OnFileInfoAsync(object sender, FilePathViewModel filePath)
+        {
+            var fileInfo = await _controller.GetFileInfoAsync(filePath);
+
+            _fileInfoWindow.DataContext = fileInfo;
+            _fileInfoWindow.Show();
+        }
+
+        private async void OnDownloadFileAsync(object sender, FilePathViewModel filePath)
+        {
+            await _controller.DownloadFileAsync(filePath);
+        }
 
         protected async override void OnInitialized(EventArgs e)
         {

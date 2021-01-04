@@ -1,6 +1,6 @@
 ﻿namespace ThesisProject.Internal.ViewModels
 {
-    public class PathViewModel
+    internal class PathViewModel
     {
         public string Value { get; set; }
     }

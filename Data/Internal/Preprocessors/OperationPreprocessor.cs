@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Data.Internal.Exceptions;
 using Data.Internal.Interfaces;
 using Newtonsoft.Json;
 using Server.DTOs;

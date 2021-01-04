@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace ThesisProject.Internal.ViewModels
 {
-    public class DeviceViewModel
+    internal class DeviceViewModel: IComparable<DeviceViewModel>
     {
         public string Name { get; set; }
 
+
         #region Overrides
+        public int CompareTo(DeviceViewModel other)
+        {
+            return Name.CompareTo(other.Name);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is DeviceViewModel dTO &&

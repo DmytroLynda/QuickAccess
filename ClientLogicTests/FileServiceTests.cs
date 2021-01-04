@@ -32,7 +32,6 @@ namespace ClientLogicTests
 
             var deviceContextFactoryMock = Mock.Get(_fakeDeviceContextFactory);
             deviceContextFactoryMock.Setup(factory => factory.GetDeviceContext(_fakeDevice)).ReturnsAsync(_fakeDeviceContext);
-            deviceContextFactoryMock.Setup(factory => factory.GetLocalDevice()).Returns(_fakeLocalDeviceContext);
         }
 
         [Test]
@@ -42,7 +41,7 @@ namespace ClientLogicTests
             var fakeFile = Mock.Of<File>();
             Mock.Get(_fakeDeviceContext).Setup(context => context.DownloadFileAsync(_fakeFilePath)).ReturnsAsync(fakeFile);
 
-            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory);
+            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory, _fakeLocalDeviceContext);
 
             //Act
             var task = fileService.DownloadFileAsync(_fakeDevice, _fakeFilePath);
@@ -52,8 +51,8 @@ namespace ClientLogicTests
             Mock.Get(_fakeDeviceContextFactory).Verify(factory => factory.GetDeviceContext(_fakeDevice), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
 
-            Mock.Get(_fakeDeviceContextFactory).Verify(factory => factory.GetLocalDevice(), Times.Once,
-                $"{nameof(fileService.DownloadFileAsync)} should get the {nameof(ILocalDeviceContext)} from {nameof(IDeviceContextFactory)}.");
+            Mock.Get(_fakeDeviceContextFactory).Verify(factory => _fakeLocalDeviceContext.SaveFileAsync(It.IsAny<byte[]>(), It.IsAny<string>()), Times.Once,
+                $"{nameof(fileService.DownloadFileAsync)} should save the file by {nameof(ILocalDeviceContext)}.");
 
             Mock.Get(_fakeDeviceContext).Verify(context => context.DownloadFileAsync(_fakeFilePath), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should download the file from {nameof(IDeviceContext)}, which was got from {nameof(IDeviceContextFactory)}.");
@@ -69,7 +68,7 @@ namespace ClientLogicTests
             var expectedFileInfo = Mock.Of<FileInfo>();
             Mock.Get(_fakeDeviceContext).Setup(deviceContext => deviceContext.GetFileInfoAsync(_fakeFilePath)).ReturnsAsync(expectedFileInfo);
 
-            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory);
+            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory, _fakeLocalDeviceContext);
 
             //Act
             var task = fileService.GetFileInfoAsync(_fakeDevice, _fakeFilePath);
@@ -93,7 +92,7 @@ namespace ClientLogicTests
 
             var fakeDirectoryPath = new Mock<DirectoryPath>(@"C:\SomeDirectory").Object;
             Mock.Get(_fakeDeviceContext).Setup(deviceContext => deviceContext.OpenFolderAsync(fakeDirectoryPath)).ReturnsAsync(expextedPathes);
-            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory);
+            var fileService = new FileService(_fakeLogger, _fakeDeviceContextFactory, _fakeLocalDeviceContext);
 
             //Act
             var task = fileService.ShowDirectoryAsync(_fakeDevice, fakeDirectoryPath);

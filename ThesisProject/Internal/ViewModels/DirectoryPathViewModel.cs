@@ -1,6 +1,6 @@
 ﻿namespace ThesisProject.Internal.ViewModels
 {
-    public class DirectoryPathViewModel
+    internal class DirectoryPathViewModel
     {
         public string Path { get; set; }
 

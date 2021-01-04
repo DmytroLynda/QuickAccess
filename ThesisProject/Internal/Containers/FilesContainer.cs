@@ -20,6 +20,8 @@ namespace ThesisProject.Internal.Containers
         public DirectoryPathViewModel CurentDirectory { get; set; }
 
         public event EventHandler<DirectoryPathViewModel> OpenDirectory;
+        public event EventHandler<FilePathViewModel> DownloadFile;
+        public event EventHandler<FilePathViewModel> FileInfo;
 
         public FilesContainer()
         {
@@ -64,6 +66,18 @@ namespace ThesisProject.Internal.Containers
             return folderButton;
         }
 
+        private void OnFileInfo(object sender, RoutedEventArgs e)
+        {
+            var path = ButtonPatches.First(buttonPath => buttonPath.button == SelectedPathButton).path;
+            FileInfo(this, new FilePathViewModel { Path = path.Value });
+        }
+
+        private void OnFileDownload(object sender, RoutedEventArgs e)
+        {
+            var path = ButtonPatches.First(buttonPath => buttonPath.button == SelectedPathButton).path;
+            DownloadFile(this, new FilePathViewModel { Path = path.Value });
+        }
+
         private void OnFolderOpen(object sender, MouseButtonEventArgs e)
         {
             var path = ButtonPatches.First(buttonPath => buttonPath.button == sender as Button).path;
@@ -72,12 +86,30 @@ namespace ThesisProject.Internal.Containers
 
         private Button MakeFileButton(PathViewModel path)
         {
+            var contextMenu = new ContextMenu();
+
+            var downloadMenuItem = new MenuItem
+            {
+                Header = "Download",
+            };
+            downloadMenuItem.Click += OnFileDownload;
+
+            var fileInfoMenuItem = new MenuItem
+            {
+                Header = "Show info"
+            };
+            fileInfoMenuItem.Click += OnFileInfo;
+
+            contextMenu.Items.Add(downloadMenuItem);
+            contextMenu.Items.Add(fileInfoMenuItem);
+
             var folderButton = new Button
             {
                 Width = 50,
                 Height = 50,
                 Margin = new Thickness(0, 5, 5, 5),
                 Content = Path.GetFileName(path.Value),
+                ContextMenu = contextMenu
             };
 
             folderButton.Click += ElementSelected;

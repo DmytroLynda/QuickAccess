@@ -8,9 +8,18 @@ namespace ThesisProject.Internal.Interfaces
     internal interface IFilesContainer
     {
         event EventHandler<DirectoryPathViewModel> OpenDirectory;
+
+        event EventHandler<FilePathViewModel> DownloadFile;
+
+        event EventHandler<FilePathViewModel> FileInfo;
+
         DeviceViewModel CurentDevice { get; set; }
+
         DirectoryPathViewModel CurentDirectory { get; set; }
+
         void Show(List<PathViewModel> pathes);
+
         void Initialize(UIElementCollection children);
+
     }
 }

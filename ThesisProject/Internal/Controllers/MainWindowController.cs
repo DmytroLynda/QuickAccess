@@ -26,6 +26,11 @@ namespace ThesisProject.Internal.Controllers
             _deviceService = deviceService;
         }
 
+        public Task DownloadFileAsync(FilePathViewModel filePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<List<DeviceViewModel>> GetDevicesAsync()
         {
             var devices = await _deviceService.GetDevicesAsync();
@@ -36,6 +41,11 @@ namespace ThesisProject.Internal.Controllers
         {
             var pathes = await _fileService.ShowDirectoryAsync(_mapper.Map<Device>(device), _mapper.Map<DirectoryPath>(directory));
             return _mapper.Map<List<PathViewModel>>(pathes);
+        }
+
+        public Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
