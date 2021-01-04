@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Data
+namespace Data.Internal.Factories
 {
     internal class OperationPreprocessorFactory : IOperationPreprocessorFactory
     {

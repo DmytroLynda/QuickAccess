@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Data.Internal
+namespace Data.Internal.Exceptions
 {
     internal class ErrorResponseMessageException : Exception
     {

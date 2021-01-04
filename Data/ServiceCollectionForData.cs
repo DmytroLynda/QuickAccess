@@ -1,8 +1,10 @@
 ﻿using ClientLogic.ExternalInterfaces;
-using Data.Internal;
+using Data.Internal.Contexts;
+using Data.Internal.Factories;
 using Data.Internal.Interfaces;
 using Data.Internal.Preprocessors;
 using DomainEntities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
@@ -10,10 +12,13 @@ namespace Data
 {
     public static class ServiceCollectionForData
     {
-        public static void ConfigureForData(this IServiceCollection services)
+        public static void ConfigureForData(this IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddSingleton<ITrackerService, TrackerServiceMock>();
-            services.AddSingleton<ITrackerContext, TrackerServiceMock>();
+            services.AddSingleton<ITrackerService, TrackerContextMock>();
+            services.AddSingleton<ITrackerContext, TrackerContextMock>();
+
+            services.Configure<LocalDeviceOptions>(configuration);
+            services.AddSingleton<ILocalDeviceContext, LocalDeviceContext>();
 
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();

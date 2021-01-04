@@ -21,7 +21,7 @@ namespace ThesisProject
         private void ConfigureServices(IServiceCollection services)
         {
             //Data layer configuratin.
-            services.ConfigureForData();
+            services.ConfigureForData(Configuration.GetSection("Data"));
 
             //Application layer configuration
             services.ConfigureForServer(Configuration.GetSection("HttpServer"));
@@ -55,7 +55,6 @@ namespace ThesisProject
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
 
-            #warning Can be problem with catching erors from the server
             var server = ServiceProvider.GetService<IServer>();
             await server.StartAsync();
         }

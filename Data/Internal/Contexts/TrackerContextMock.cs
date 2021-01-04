@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Data
+namespace Data.Internal.Contexts
 {
-    internal class TrackerServiceMock : ITrackerService, ITrackerContext
+    internal class TrackerContextMock : ITrackerService, ITrackerContext
     {
         private readonly List<Device> _devices = new List<Device>();
         private readonly Dictionary<Device, Uri> _uris = new Dictionary<Device, Uri>();
 
-        public TrackerServiceMock()
+        public TrackerContextMock()
         {
             _devices.Add(new Device { Id = 1, Name = "Dima" });
             _devices.Add(new Device { Id = 2, Name = "Julia" });

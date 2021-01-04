@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Data.Internal.Interfaces;
 
-namespace Data.Internal
+namespace Data.Internal.Contexts
 {
     internal class HttpDeviceContext : IDeviceContext
     {
