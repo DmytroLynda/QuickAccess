@@ -38,13 +38,13 @@
                 </Border>
                 <Border Padding="0,0,10,0">
                     <Border CornerRadius="5" Background="#FFECECEC">
-                            <ScrollViewer Margin="5">
+                            <ScrollViewer Margin="5,5,5,0">
                                 <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"></StackPanel>
                             </ScrollViewer>
                     </Border>
                 </Border>
                 <Border DockPanel.Dock="Right" CornerRadius="5" Background="#FFECECEC">
-                    <WrapPanel Name="FilesPanel" Margin="5,0,0,0">
+                    <WrapPanel Name="FilesPanel" Margin="5,5,0,0">
 
                     </WrapPanel>
                 </Border>

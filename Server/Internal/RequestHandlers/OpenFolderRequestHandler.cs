@@ -43,7 +43,7 @@ namespace Server.Internal.RequestHandlers
 
         private byte[] GetDrives()
         {
-            var drives = DriveInfo.GetDrives();
+            var drives = DriveInfo.GetDrives().Where(drive => drive.IsReady);
 
             var responseDrives = drives.Select(drive => new PathDTO 
             { 
@@ -73,6 +73,7 @@ namespace Server.Internal.RequestHandlers
         {
             return directoryInfo
                 .GetFileSystemInfos()
+                .Where(info => info.Exists)
                 .Select(info => new PathDTO
                 { 
                     Value = info.FullName

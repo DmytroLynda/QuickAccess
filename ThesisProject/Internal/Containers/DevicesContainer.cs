@@ -10,8 +10,6 @@ namespace ThesisProject.Internal.Containers
 {
     internal class DevicesContainer : BaseContainer<DeviceViewModel>, IDevicesContainer
     {
-        public DeviceViewModel LastSelectedDevice { get; set; }
-
         public DevicesContainer()
         {
             LeftClick += OnLeftClick;
@@ -26,17 +24,12 @@ namespace ThesisProject.Internal.Containers
 
         public DeviceViewModel GetSelectedDevice()
         {
-            if (!IsSelectedDevice())
-            {
-                throw new InvalidOperationException("No selected device!");
-            }
-
-            return LastSelectedDevice;
+            return SelectedViewModel;
         }
 
         public bool IsSelectedDevice()
         {
-            return LastSelectedDevice is not null;
+            return SelectedViewModel is not null;
         }
     }
 }

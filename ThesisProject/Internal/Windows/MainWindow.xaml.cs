@@ -65,7 +65,7 @@ namespace ThesisProject.Internal.Windows
 
         private async void OnOpenDirectoryAsync(object sender, DirectoryPathViewModel directory)
         {
-            await UpdateFilesMenuAsync(_filesContainer.CurentDevice, directory);
+            await UpdateFilesMenuAsync(_devicesContainer.GetSelectedDevice(), directory);
         }
 
         private async void OnDeviceWasSelectedAsync(object sender, DeviceViewModel device)

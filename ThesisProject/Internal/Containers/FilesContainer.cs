@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+using ThesisProject.Internal.Enums;
+using ThesisProject.Internal.Helpers;
 using ThesisProject.Internal.Interfaces;
 using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Containers
 {
-    internal class FilesContainer : IFilesContainer
+    internal class FilesContainer : BaseContainer<PathViewModel>, IFilesContainer
     {
-        private UIElementCollection UIElements { get; set; }
-        private List<(Button button, PathViewModel path)> ButtonPatches { get; set; }
-        private Button SelectedPathButton { get; set;}
-
         public DeviceViewModel CurentDevice { get; set; }
         public DirectoryPathViewModel CurentDirectory { get; set; }
 
@@ -25,107 +19,39 @@ namespace ThesisProject.Internal.Containers
 
         public FilesContainer()
         {
-            ButtonPatches = new List<(Button button, PathViewModel path)>();
-        }
-
-        public void Initialize(UIElementCollection uiElements)
-        {
-            UIElements = uiElements ?? throw new ArgumentNullException(nameof(uiElements));
-        }
-
-        public void Show(List<PathViewModel> pathes)
-        {
-            ButtonPatches.Clear();
-            foreach (var path in pathes)
+            var fileOptionsNames = Enum.GetValues<FileOption>().Select(option => option.ToString());
+            foreach (var fileOptionName in fileOptionsNames)
             {
-                if (Path.HasExtension(path.Value))
-                {
-                    ButtonPatches.Add((MakeFileButton(path), path));
-                }
-                else
-                {
-                    ButtonPatches.Add((MakeFolderButton(path), path));
-                }
+                AddContextOption(fileOptionName, (content) => content.IsFile());
             }
+            ContextOptionSelected += OnContextOptionSelected;
 
-            UIElements.Clear();
-            ButtonPatches.ForEach(buttonPath => UIElements.Add(buttonPath.button));
+            LeftClick += OnLeftClick;
         }
 
-        private Button MakeFolderButton(PathViewModel path)
+        private void OnContextOptionSelected(object sender, (PathViewModel path, string header) contextOption)
         {
-            var folderButton = new Button
+            var selectedFileOption = Enum.GetValues<FileOption>().First(option => option.ToString() == contextOption.header);
+
+            switch (selectedFileOption)
             {
-                Width = 50,
-                Height = 50,
-                Margin = new Thickness(0, 5, 5, 5),
-                Content = Path.GetDirectoryName(path.Value),
-            };
-
-            folderButton.MouseDoubleClick += OnFolderOpen;
-            return folderButton;
-        }
-
-        private void OnFileInfo(object sender, RoutedEventArgs e)
-        {
-            var path = ButtonPatches.First(buttonPath => buttonPath.button == SelectedPathButton).path;
-            FileInfo(this, new FilePathViewModel { Path = path.Value });
-        }
-
-        private void OnFileDownload(object sender, RoutedEventArgs e)
-        {
-            var path = ButtonPatches.First(buttonPath => buttonPath.button == SelectedPathButton).path;
-            DownloadFile(this, new FilePathViewModel { Path = path.Value });
-        }
-
-        private void OnFolderOpen(object sender, MouseButtonEventArgs e)
-        {
-            var path = ButtonPatches.First(buttonPath => buttonPath.button == sender as Button).path;
-            OpenDirectory(this, new DirectoryPathViewModel { Path = path.Value });
-        }
-
-        private Button MakeFileButton(PathViewModel path)
-        {
-            var contextMenu = new ContextMenu();
-
-            var downloadMenuItem = new MenuItem
-            {
-                Header = "Download",
-            };
-            downloadMenuItem.Click += OnFileDownload;
-
-            var fileInfoMenuItem = new MenuItem
-            {
-                Header = "Show info"
-            };
-            fileInfoMenuItem.Click += OnFileInfo;
-
-            contextMenu.Items.Add(downloadMenuItem);
-            contextMenu.Items.Add(fileInfoMenuItem);
-
-            var folderButton = new Button
-            {
-                Width = 50,
-                Height = 50,
-                Margin = new Thickness(0, 5, 5, 5),
-                Content = Path.GetFileName(path.Value),
-                ContextMenu = contextMenu
-            };
-
-            folderButton.Click += ElementSelected;
-            return folderButton;
-        }
-
-        private void ElementSelected(object sender, RoutedEventArgs e)
-        {
-            if (SelectedPathButton is not null)
-            {
-                SelectedPathButton.IsEnabled = true;
+                case FileOption.Download:
+                    DownloadFile(this, contextOption.path.ToFilePath());
+                    break;
+                case FileOption.ShowInfo:
+                    FileInfo(this, contextOption.path.ToFilePath());
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown {nameof(FileOption)} type: {selectedFileOption}.");
             }
+        }
 
-
-            SelectedPathButton = sender as Button;
-            SelectedPathButton.IsEnabled = false;
+        private void OnLeftClick(object sender, PathViewModel path)
+        {
+            if (path.IsDirectory())
+            {
+                OpenDirectory(this, path.ToDirectoryPath());
+            }
         }
     }
 }

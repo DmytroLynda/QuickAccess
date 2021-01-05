@@ -17,7 +17,7 @@ namespace ThesisProject.Internal.Interfaces
 
         DirectoryPathViewModel CurentDirectory { get; set; }
 
-        void Show(List<PathViewModel> pathes);
+        void Show(IEnumerable<PathViewModel> pathes);
 
         void Initialize(UIElementCollection children);
 

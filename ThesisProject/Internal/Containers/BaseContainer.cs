@@ -14,16 +14,24 @@ namespace ThesisProject.Internal.Containers
     internal abstract class BaseContainer<TViewModel>
         where TViewModel : IComparable<TViewModel>
     {
-        private UIElementCollection UIElements { get; set; }
-        private List<(Button button, TViewModel viewModel)> ButtonViewModels { get; set; }
+        protected TViewModel SelectedViewModel { get; private set; }
 
         protected event EventHandler<(TViewModel viewModel, string header)> ContextOptionSelected;
+
         protected event EventHandler<TViewModel> LeftClick;
+
         protected event EventHandler<TViewModel> RightClick;
+
+        private UIElementCollection UIElements { get; set; }
+
+        private List<(Button button, TViewModel viewModel)> ButtonViewModels { get; set; }
+
+        private List<(string header, Func<string, bool> conditionByContent)> ContextOptions { get; set; }
 
         protected BaseContainer()
         {
             ButtonViewModels = new List<(Button button, TViewModel viewModel)>();
+            ContextOptions = new List<(string header, Func<string, bool> conditionByContent)>();
         }
 
         public void Initialize(UIElementCollection uiElements)
@@ -43,16 +51,15 @@ namespace ThesisProject.Internal.Containers
             SetUIElements(ButtonViewModels);
         }
 
-        private TViewModel GetSelectedViewModel(Button selectedButton)
+        protected void AddContextOption(string header, Func<string, bool> conditionByContent)
         {
-            return ButtonViewModels.First(buttonPath => buttonPath.button == selectedButton).viewModel;
+            AddContextOptionIfNotExists(header, conditionByContent);
+            ContextOptions.Add((header, conditionByContent));
         }
 
-        protected void AddContextOptionIfNotExists(string header, Func<string, bool> conditionByContent)
+        private void AddContextOptionIfNotExists(string header, Func<string, bool> conditionByContent)
         {
-            var menuItem = new MenuItem();
-            menuItem.Header = header;
-            menuItem.Click += OnContextOptionSelected;
+            var menuItem =  CreateMenuItem(header);
 
             var fittingConditionButtons = ButtonViewModels
                 .Where(buttonViewModel => conditionByContent(buttonViewModel.button.Content.ToString()))
@@ -76,6 +83,24 @@ namespace ThesisProject.Internal.Containers
             }
         }
 
+        private void OnRightButtonClick(object sender, MouseButtonEventArgs e)
+        {
+            SelectedViewModel = GetSelectedViewModel(sender as Button);
+            if (RightClick is not null)
+            { 
+                RightClick(this, SelectedViewModel);
+            }
+        }
+
+        private void OnLeftButtonClick(object sender, RoutedEventArgs e)
+        {
+            SelectedViewModel = GetSelectedViewModel(sender as Button);
+            if (LeftClick is not null)
+            { 
+                LeftClick(this, SelectedViewModel);
+            }
+        }
+
         private void OnContextOptionSelected(object sender, RoutedEventArgs e)
         {
             var contextOption = sender as MenuItem;
@@ -85,6 +110,10 @@ namespace ThesisProject.Internal.Containers
 
             var header = contextOption.Header.ToString();
             ContextOptionSelected(this, (selectedViewModel, header));
+        }
+        private TViewModel GetSelectedViewModel(Button selectedButton)
+        {
+            return ButtonViewModels.First(buttonPath => buttonPath.button == selectedButton).viewModel;
         }
 
         private void SetUIElements(List<(Button button, TViewModel viewModel)> buttonViewModels)
@@ -99,8 +128,9 @@ namespace ThesisProject.Internal.Containers
             {
                 Content = viewModel.ToString(),
                 FontSize = 16,
-                Margin = new Thickness(0, 0, 0, 5),
+                Margin = new Thickness(0, 0, 5, 5),
             };
+            viewModelButton.ContextMenu = GetContextMenu(viewModelButton.Content);
 
             viewModelButton.Click += OnLeftButtonClick;
             viewModelButton.PreviewMouseRightButtonUp += OnRightButtonClick;
@@ -108,16 +138,27 @@ namespace ThesisProject.Internal.Containers
             return viewModelButton;
         }
 
-        private void OnRightButtonClick(object sender, MouseButtonEventArgs e)
+        private ContextMenu GetContextMenu(object content)
         {
-            var selectedViewModel = GetSelectedViewModel(sender as Button);
-            RightClick(this, selectedViewModel);
+            ContextMenu contextMenu = new ContextMenu();
+            foreach (var contextOption in ContextOptions)
+            {
+                if (contextOption.conditionByContent(content.ToString()))
+                {
+                    contextMenu.Items.Add(CreateMenuItem(contextOption.header));
+                }
+            }
+
+            return contextMenu;
         }
 
-        private void OnLeftButtonClick(object sender, RoutedEventArgs e)
+        private MenuItem CreateMenuItem(string header)
         {
-            var selectedViewModel = GetSelectedViewModel(sender as Button);
-            LeftClick(this, selectedViewModel);
+            var menuItem = new MenuItem();
+            menuItem.Header = header;
+            menuItem.Click += OnContextOptionSelected;
+
+            return menuItem;
         }
     }
 }
