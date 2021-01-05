@@ -51,9 +51,6 @@ namespace ClientLogicTests
             Mock.Get(_fakeDeviceContextFactory).Verify(factory => factory.GetDeviceContext(_fakeDevice), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should get {nameof(IDeviceContext)} from {nameof(IDeviceContextFactory)}.");
 
-            Mock.Get(_fakeDeviceContextFactory).Verify(factory => _fakeLocalDeviceContext.SaveFileAsync(It.IsAny<byte[]>(), It.IsAny<string>()), Times.Once,
-                $"{nameof(fileService.DownloadFileAsync)} should save the file by {nameof(ILocalDeviceContext)}.");
-
             Mock.Get(_fakeDeviceContext).Verify(context => context.DownloadFileAsync(_fakeFilePath), Times.Once,
                 $"{nameof(fileService.DownloadFileAsync)} should download the file from {nameof(IDeviceContext)}, which was got from {nameof(IDeviceContextFactory)}.");
 

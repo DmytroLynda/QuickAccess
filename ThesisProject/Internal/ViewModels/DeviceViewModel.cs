@@ -7,7 +7,6 @@ namespace ThesisProject.Internal.ViewModels
     {
         public string Name { get; set; }
 
-
         #region Overrides
         public int CompareTo(DeviceViewModel other)
         {
