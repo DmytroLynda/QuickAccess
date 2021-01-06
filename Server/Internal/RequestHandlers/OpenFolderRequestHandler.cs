@@ -4,6 +4,7 @@ using Server.DTOs;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
 using Server.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Server.Internal.RequestHandlers
 
         private byte[] Handle(byte[] requestData)
         {
-            var request = DeserializeRequest<DirectoryPathDTO>(requestData);
+            var request = GetRequest<DirectoryPathDTO>(requestData);
             
             bool isDrive = string.IsNullOrEmpty(request.Path);
             if (isDrive)
@@ -68,18 +69,59 @@ namespace Server.Internal.RequestHandlers
             }
         }
 
-
         private List<PathDTO> GetFolder(DirectoryInfo directoryInfo)
         {
-            return directoryInfo
-                .GetFileSystemInfos()
-                .Where(info => info.Exists)
-                .Select(info => new PathDTO
-                { 
-                    Value = info.FullName
-                })
-                .ToList();
+            try
+            { 
+                var directoryInfos = directoryInfo
+                    .GetDirectories()
+                    .Where(directory => IsExist(directory) && !directory.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Select(directory => new PathDTO { Value = directory.FullName });
+
+                var fileInfos = directoryInfo
+                    .GetFiles()
+                    .Where(file => IsExist(file) && !file.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Select(file => new PathDTO { Value = file.FullName });
+
+                var folder = new List<PathDTO>();
+                folder.AddRange(directoryInfos);
+                folder.AddRange(fileInfos);
+                return folder;
+            }
+            catch(Exception e)
+            {
+                _logger.LogWarning($"An exception was occured when try access to {directoryInfo.FullName}," +
+                    $"\nException: {e.GetType()}, message: {e.Message}.");
+                return new List<PathDTO>(0);
+            }
         }
+
+        private bool IsExist(FileInfo file)
+        {
+            try
+            {
+                file.OpenRead().Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsExist(DirectoryInfo directory)
+        {
+            try
+            {
+                directory.GetFileSystemInfos();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
         private byte[] FormResponse(ResponseType type, byte[] response)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using ThesisProject.Internal.Helpers;
 using ThesisProject.Internal.Interfaces;
 using ThesisProject.Internal.ViewModels;
 
@@ -39,6 +40,14 @@ namespace ThesisProject.Internal.Windows
             InitializeComponent();
         }
 
+        private async void OnBackButtonClickAsync(object sender, RoutedEventArgs e)
+        {
+            var previousDirectory = _filesContainer.CurentDirectory.Back();
+            _filesContainer.CurentDirectory = previousDirectory;
+
+            await UpdateFilesMenuAsync(_filesContainer.CurentDevice, _filesContainer.CurentDirectory);
+        }
+
         private async void OnFileInfoAsync(object sender, FilePathViewModel filePath)
         {
             var fileInfo = await _controller.GetFileInfoAsync(filePath);
@@ -49,11 +58,13 @@ namespace ThesisProject.Internal.Windows
 
         private async void OnDownloadFileAsync(object sender, FilePathViewModel filePath)
         {
-            await _controller.DownloadFileAsync(filePath);
+            await _controller.DownloadFileAsync(_devicesContainer.GetSelectedDevice(), filePath);
         }
 
         protected async override void OnInitialized(EventArgs e)
         {
+            BackButton.Click += OnBackButtonClickAsync;
+
             _filesContainer.Initialize(FilesPanel.Children);
             _devicesContainer.Initialize(DevicesPanel.Children);
             _menuUpdater.Start();

@@ -39,7 +39,7 @@ namespace ThesisProject.Internal.Containers
             UIElements = uiElements ?? throw new ArgumentNullException(nameof(uiElements));
         }
 
-        public void Show(IEnumerable<TViewModel> viewModels)
+        public virtual void Show(IEnumerable<TViewModel> viewModels)
         {
             ButtonViewModels.RemoveAll(deviceButton => !viewModels.Contains(deviceButton.viewModel));
 
@@ -105,11 +105,9 @@ namespace ThesisProject.Internal.Containers
         {
             var contextOption = sender as MenuItem;
             var contextMenu = contextOption.Parent as ContextMenu;
-            var button = contextMenu.Parent as Button;
-            var selectedViewModel = GetSelectedViewModel(button);
 
             var header = contextOption.Header.ToString();
-            ContextOptionSelected(this, (selectedViewModel, header));
+            ContextOptionSelected(this, (SelectedViewModel, header));
         }
         private TViewModel GetSelectedViewModel(Button selectedButton)
         {
@@ -157,6 +155,7 @@ namespace ThesisProject.Internal.Containers
             var menuItem = new MenuItem();
             menuItem.Header = header;
             menuItem.Click += OnContextOptionSelected;
+
 
             return menuItem;
         }

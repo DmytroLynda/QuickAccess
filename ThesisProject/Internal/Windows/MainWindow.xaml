@@ -17,12 +17,12 @@
             </Border.Background>
             <DockPanel Name="TitleBarPanel">
                 <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Grid.Column="0" DockPanel.Dock="Left">
-                    <Label Name="TrackerStatusTitle" Content="Tracker status: " VerticalContentAlignment="Center" FontSize="16"></Label>
-                    <Label Name="TrackerStatus" VerticalContentAlignment="Center" FontSize="16" Content="Unknown"></Label>
+                    <Label Name="TrackerStatusTitle" Content="Tracker status: " VerticalContentAlignment="Center" FontSize="16"/>
+                    <Label Name="TrackerStatus" VerticalContentAlignment="Center" FontSize="16" Content="Unknown"/>
                 </StackPanel>
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Grid.Column="1" DockPanel.Dock="Right">
-                    <Button Margin="0,0,10,0" Name="LogOutButton" Content="Log out" MinWidth="100" FontSize="16"></Button>
-                    <Label Name="UserNameLabel" VerticalContentAlignment="Center" Content="Dmytro Lynda" FontSize="16"></Label>
+                    <Button Margin="0,0,10,0" Name="LogOutButton" Content="Log out" MinWidth="100" FontSize="16"/>
+                    <Label Name="UserNameLabel" VerticalContentAlignment="Center" Content="Dmytro Lynda" FontSize="16"/>
                 </StackPanel>
             </DockPanel>
         </Border>
@@ -30,24 +30,31 @@
                 <Border Padding="0,0,10,0" DockPanel.Dock="Left">
                     <Border CornerRadius="5" Background="#FFECECEC">
                         <StackPanel Name="SidebarPanel" Orientation="Vertical"  Width="200" >
-                        <Button Margin="5" Name="AddDeviceButton" Content="Add new device" Height="40" FontSize="16"></Button>
-                        <Button Margin="5,0,5,5" Name="RemoveDeviceButton" Content="Remove device" Height="40" FontSize="16"></Button>
-                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"></Button>
-                        </StackPanel>
+                        <Button Margin="5" Name="AddDeviceButton" Content="Add new device" Height="40" FontSize="16"/>
+                        <Button Margin="5,0,5,5" Name="RemoveDeviceButton" Content="Remove device" Height="40" FontSize="16"/>
+                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"/>
+                    </StackPanel>
                     </Border>
                 </Border>
                 <Border Padding="0,0,10,0">
                     <Border CornerRadius="5" Background="#FFECECEC">
                             <ScrollViewer Margin="5,5,5,0">
-                                <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"></StackPanel>
+                                <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"/>
                             </ScrollViewer>
                     </Border>
                 </Border>
                 <Border DockPanel.Dock="Right" CornerRadius="5" Background="#FFECECEC">
-                    <WrapPanel Name="FilesPanel" Margin="5,5,0,0">
+                    <Border Margin="5">
+                        <StackPanel Orientation="Vertical">
+                            <ToolBar Height="35">
+                                <Button x:Name="BackButton" Content="Back" Width="50"/>
+                            </ToolBar>
+                            <WrapPanel Name="FilesPanel" Margin="5,5,0,0">
 
-                    </WrapPanel>
-                </Border>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+            </Border>
             </DockPanel>
     </DockPanel>
 </Window>

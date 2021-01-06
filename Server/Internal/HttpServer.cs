@@ -82,7 +82,7 @@ namespace Server.Internal
             await httpResponse.OutputStream.WriteAsync(response);
         }
 
-        private byte[] FormErrorResponse(Exception exception)
+        private byte[] FormErrorResponse(ServerException exception)
         {
             var error = new ErrorDTO
             {

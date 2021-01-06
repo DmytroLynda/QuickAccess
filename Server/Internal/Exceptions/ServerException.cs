@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Server.Internal.Exceptions
 {
-    internal class ServerException : Exception
+    public class ServerException : Exception
     {
-        public ServerException(Exception innerException) : base(string.Empty, innerException)
+        public ServerException(Exception innerException) : base(innerException.Message, innerException)
         { }
     }
 }

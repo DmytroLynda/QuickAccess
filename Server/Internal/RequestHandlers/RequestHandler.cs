@@ -10,7 +10,7 @@ namespace Server.Internal.RequestHandlers
     {
         public abstract Task<byte[]> HandleAsync(byte[] data);
 
-        protected TRequest DeserializeRequest<TRequest>(byte[] request)
+        protected TRequest GetRequest<TRequest>(byte[] request)
         {
             var serializedRequest = Encoding.UTF8.GetString(request);
             return JsonConvert.DeserializeObject<TRequest>(serializedRequest);

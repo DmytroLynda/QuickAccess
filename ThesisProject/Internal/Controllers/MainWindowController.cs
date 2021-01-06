@@ -26,9 +26,12 @@ namespace ThesisProject.Internal.Controllers
             _deviceService = deviceService;
         }
 
-        public Task DownloadFileAsync(FilePathViewModel filePath)
+        public async Task DownloadFileAsync(DeviceViewModel deviceViewModel, FilePathViewModel filePathViewModel)
         {
-            throw new System.NotImplementedException();
+            var device = _mapper.Map<Device>(deviceViewModel);
+            var filePath = _mapper.Map<FilePath>(filePathViewModel);
+
+            await _fileService.DownloadFileAsync(device, filePath);
         }
 
         public async Task<List<DeviceViewModel>> GetDevicesAsync()

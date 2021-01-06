@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ThesisProject.Internal.Enums;
@@ -29,17 +30,24 @@ namespace ThesisProject.Internal.Containers
             LeftClick += OnLeftClick;
         }
 
+        public override void Show(IEnumerable<PathViewModel> pathes)
+        {
+            var pathNames = pathes.Select(path => path.GetName());
+            base.Show(pathNames);
+        }
+
         private void OnContextOptionSelected(object sender, (PathViewModel path, string header) contextOption)
         {
             var selectedFileOption = Enum.GetValues<FileOption>().First(option => option.ToString() == contextOption.header);
+            var fullPath = contextOption.path.JoinAsRoot(CurentDirectory);
 
             switch (selectedFileOption)
             {
                 case FileOption.Download:
-                    DownloadFile(this, contextOption.path.ToFilePath());
+                    DownloadFile(this, fullPath.ToFilePath());
                     break;
                 case FileOption.ShowInfo:
-                    FileInfo(this, contextOption.path.ToFilePath());
+                    FileInfo(this, fullPath.ToFilePath());
                     break;
                 default:
                     throw new ArgumentException($"Unknown {nameof(FileOption)} type: {selectedFileOption}.");
@@ -48,9 +56,11 @@ namespace ThesisProject.Internal.Containers
 
         private void OnLeftClick(object sender, PathViewModel path)
         {
+            var fullPath = path.JoinAsRoot(CurentDirectory);
+
             if (path.IsDirectory())
             {
-                OpenDirectory(this, path.ToDirectoryPath());
+                OpenDirectory(this, fullPath.ToDirectoryPath());
             }
         }
     }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Server.Internal.Exceptions;
+using System;
 
 namespace Server.DTOs.ResponseTypes
 {
     public class ErrorDTO
     {
-        public Exception Exception { get; set; }
+        public ServerException Exception { get; set; }
     }
 }

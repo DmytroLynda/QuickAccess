@@ -18,7 +18,7 @@ namespace Server.Internal.RequestHandlers
 
         public override async Task<byte[]> HandleAsync(byte[] requestData)
         {
-            var request = DeserializeRequest<FilePathDTO>(requestData);
+            var request = GetRequest<FilePathDTO>(requestData);
 
             var fileInfo = new FileInfo(request.Path);
             if (fileInfo.Exists)
