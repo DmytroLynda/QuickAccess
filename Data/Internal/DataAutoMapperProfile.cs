@@ -13,8 +13,6 @@ namespace Data.Internal
         {
             CreateMap<FilePath, FilePathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
 
-            CreateMap<FileDTO, File>();
-
             CreateMap<FileInfoDTO, FileInfo>();
 
             CreateMap<DirectoryPath, DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));

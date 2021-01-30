@@ -75,12 +75,12 @@ namespace Server.Internal.RequestHandlers
             { 
                 var directoryInfos = directoryInfo
                     .GetDirectories()
-                    .Where(directory => IsExist(directory) && !directory.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Where(directory => directory.Exists && !directory.Attributes.HasFlag(FileAttributes.Hidden))
                     .Select(directory => new PathDTO { Value = directory.FullName });
 
                 var fileInfos = directoryInfo
                     .GetFiles()
-                    .Where(file => IsExist(file) && !file.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Where(file => file.Exists && !file.Attributes.HasFlag(FileAttributes.Hidden))
                     .Select(file => new PathDTO { Value = file.FullName });
 
                 var folder = new List<PathDTO>();
@@ -98,6 +98,12 @@ namespace Server.Internal.RequestHandlers
 
         private bool IsExist(FileInfo file)
         {
+            if (!file.Exists ||
+                !file.Attributes.HasFlag(FileAttributes.Hidden))
+            {
+                return false;
+            }
+
             try
             {
                 file.OpenRead().Close();
@@ -111,6 +117,12 @@ namespace Server.Internal.RequestHandlers
 
         private bool IsExist(DirectoryInfo directory)
         {
+            if (!directory.Exists ||
+                !directory.Attributes.HasFlag(FileAttributes.Hidden))
+            {
+                return false;
+            }
+
             try
             {
                 directory.GetFileSystemInfos();
@@ -121,7 +133,6 @@ namespace Server.Internal.RequestHandlers
                 return false;
             }
         }
-
 
         private byte[] FormResponse(ResponseType type, byte[] response)
         {

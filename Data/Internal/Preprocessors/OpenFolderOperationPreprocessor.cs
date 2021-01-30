@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Data.Internal.Preprocessors
 {
-    internal class OpenFolderOperationPreprocessor : OperationPreprocessor<DirectoryPath, List<Path>>
+    internal class OpenFolderOperationPreprocessor : JsonOperationPreprocessor<DirectoryPath, List<Path>>
     {
         public OpenFolderOperationPreprocessor(IMapper mapper)
             :base(mapper)

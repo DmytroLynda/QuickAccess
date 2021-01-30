@@ -18,13 +18,11 @@ namespace ClientLogic.Internal
     {
         private readonly ILogger<IFileService> _logger;
         private readonly IDeviceContextFactory _deviceFactory;
-        private readonly ILocalDeviceContext _localDeviceContext;
 
-        public FileService(ILogger<IFileService> logger, IDeviceContextFactory deviceFactory, ILocalDeviceContext localDeviceContext)
+        public FileService(ILogger<IFileService> logger, IDeviceContextFactory deviceFactory)
         {
             _logger = logger;
             _deviceFactory = deviceFactory;
-            _localDeviceContext = localDeviceContext;
         }
 
         public async Task DownloadFileAsync(Device device, FilePath filePath)
@@ -42,9 +40,7 @@ namespace ClientLogic.Internal
             #endregion
 
             var remoteDeviceContext = await _deviceFactory.GetDeviceContext(device);
-            var fileResponse = await remoteDeviceContext.DownloadFileAsync(filePath);
-
-            await _localDeviceContext.SaveFileAsync(fileResponse.Body, fileResponse.ShortFileName);
+            await remoteDeviceContext.DownloadFileAsync(filePath);
         }
 
         public async Task<FileInfo> GetFileInfoAsync(Device device, FilePath file)

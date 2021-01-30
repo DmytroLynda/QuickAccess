@@ -7,6 +7,7 @@ using Data.Internal.Preprocessors;
 using DomainEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Server.DTOs.ResponseTypes;
 using System.Collections.Generic;
 
 namespace Data
@@ -24,8 +25,10 @@ namespace Data
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();
 
-            services.AddScoped<IOperationPreprocessor<FilePath, File>, DownloadFileOperationPreprocessor>();
+            services.AddScoped<IOperationPreprocessor<FilePath, FileDTO>, DownloadFileOperationPreprocessor>();
             services.AddScoped<IOperationPreprocessor<DirectoryPath, List<Path>>, OpenFolderOperationPreprocessor>();
+
+            services.AddScoped<HttpDeviceContext>();
         }
     }
 }

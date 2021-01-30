@@ -12,23 +12,24 @@ namespace Data.Internal.Factories
     internal class DeviceContextFactory : IDeviceContextFactory
     {
         private readonly ILogger<DeviceContextFactory> _logger;
-        private readonly ILoggerFactory _loggerFactory;
         private readonly ITrackerService _tracker;
-        private readonly IOperationPreprocessorFactory _preprocessorFactory;
+        private readonly IServiceProvider _serviceProvider;
 
-        public DeviceContextFactory(ILoggerFactory loggerFactory, ITrackerService tracker, IOperationPreprocessorFactory preprocessorFactory)
+        public DeviceContextFactory(ILogger<DeviceContextFactory> logger, ITrackerService tracker, IServiceProvider serviceProvider)
         {
-            _logger = loggerFactory.CreateLogger<DeviceContextFactory>();
-            _loggerFactory = loggerFactory;
+            _logger = logger;
             _tracker = tracker;
-            _preprocessorFactory = preprocessorFactory;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IDeviceContext> GetDeviceContext(Device device)
         {
             var deviceAddress = await _tracker.GetDeviceUriAsync(device);
 
-            return new HttpDeviceContext(_loggerFactory.CreateLogger<HttpDeviceContext>(), deviceAddress, device, _preprocessorFactory);
+            var context = _serviceProvider.GetRequiredService<HttpDeviceContext>();
+            context.DeviceAddress = deviceAddress;
+
+            return context;
         }
     }
 }

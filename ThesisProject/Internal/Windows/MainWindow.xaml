@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="400" MinWidth="700" Height="448" Width="800" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        Title="QuickAccess" MinHeight="400" MinWidth="700" Height="448" Width="800" ScrollViewer.VerticalScrollBarVisibility="Disabled">
     <DockPanel LastChildFill="true">
         <Border Padding="10" DockPanel.Dock="Top" Height="60">
             <Border.Background>
@@ -30,21 +30,20 @@
                 <Border Padding="0,0,10,0" DockPanel.Dock="Left">
                     <Border CornerRadius="5" Background="#FFECECEC">
                         <StackPanel Name="SidebarPanel" Orientation="Vertical"  Width="200" >
-                        <Button Margin="5" Name="AddDeviceButton" Content="Add new device" Height="40" FontSize="16"/>
-                        <Button Margin="5,0,5,5" Name="RemoveDeviceButton" Content="Remove device" Height="40" FontSize="16"/>
-                        <Button Margin="5,0,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"/>
+                        <Button Margin="5,5,5,5" Name="ConfigurationButton" Content="Configuration" Height="40" FontSize="16"/>
                     </StackPanel>
                     </Border>
                 </Border>
                 <Border Padding="0,0,10,0">
                     <Border CornerRadius="5" Background="#FFECECEC">
-                            <ScrollViewer Margin="5,5,5,0">
-                                <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"/>
-                            </ScrollViewer>
+                        <ScrollViewer Margin="5,5,5,0">
+                            <StackPanel CanHorizontallyScroll="true" Name="DevicesPanel" Orientation="Vertical" Width="150"/>
+                        </ScrollViewer>
                     </Border>
                 </Border>
                 <Border DockPanel.Dock="Right" CornerRadius="5" Background="#FFECECEC">
                     <Border Margin="5">
+                    <ScrollViewer Margin="5,5,5,0">
                         <StackPanel Orientation="Vertical">
                             <ToolBar Height="35">
                                 <Button x:Name="BackButton" Content="Back" Width="50"/>
@@ -53,8 +52,9 @@
 
                             </WrapPanel>
                         </StackPanel>
+                        </ScrollViewer>
                     </Border>
-            </Border>
+                </Border>
             </DockPanel>
     </DockPanel>
 </Window>

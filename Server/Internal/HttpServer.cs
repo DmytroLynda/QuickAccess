@@ -80,6 +80,8 @@ namespace Server.Internal
 
             using var httpResponse = incomingContext.Response;
             await httpResponse.OutputStream.WriteAsync(response);
+
+            response.
         }
 
         private byte[] FormErrorResponse(ServerException exception)

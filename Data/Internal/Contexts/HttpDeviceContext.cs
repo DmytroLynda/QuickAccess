@@ -6,27 +6,51 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Data.Internal.Interfaces;
+using Server.DTOs.ResponseTypes;
 
 namespace Data.Internal.Contexts
 {
     internal class HttpDeviceContext : IDeviceContext
     {
         private readonly ILogger<IDeviceContext> _logger;
-        private readonly Device _device;
-        private readonly Uri _deviceAddress;
         private readonly IOperationPreprocessorFactory _preprocessorFactory;
-
-        public HttpDeviceContext(ILogger<IDeviceContext> logger, Uri deviceAddress, Device device, IOperationPreprocessorFactory preprocessorFactory)
+        private readonly ILocalDeviceContext _localDeviceContext;
+        private Uri _deviceAddress;
+        internal Uri DeviceAddress
         {
-            _logger = logger;
-            _device = device;
-            _deviceAddress = deviceAddress;
-            _preprocessorFactory = preprocessorFactory;
+            get
+            {
+                if (_deviceAddress is null)
+                {
+                    throw new InvalidOperationException($"The {nameof(HttpDeviceContext)} should have defined the device address before any requests.");
+                }
+
+                return _deviceAddress;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentException("Value can't be null.");
+                }
+
+                _deviceAddress = value;
+            }
         }
 
-        public async Task<File> DownloadFileAsync(FilePath file)
+        public HttpDeviceContext(
+            ILogger<IDeviceContext> logger,
+            IOperationPreprocessorFactory preprocessorFactory,
+            ILocalDeviceContext localDeviceContext)
         {
-            return await HttpPostAsync<FilePath, File>(file);
+            _logger = logger;
+            _preprocessorFactory = preprocessorFactory;
+            _localDeviceContext = localDeviceContext;
+        }
+
+        public async Task DownloadFileAsync(FilePath file)
+        {
+            await _localDeviceContext.SaveFileAsync(await HttpPostAsync<FilePath, FileDTO>(file));
         }
 
         public async Task<FileInfo> GetFileInfoAsync(FilePath file)
@@ -47,7 +71,7 @@ namespace Data.Internal.Contexts
             var requestContent = new ByteArrayContent(preprocessedRequest);
 
             using var httpClient = new HttpClient();
-            var httpResponse = await httpClient.PostAsync(_deviceAddress, requestContent);
+            var httpResponse = await httpClient.PostAsync(DeviceAddress, requestContent);
             httpResponse.EnsureSuccessStatusCode();
 
             var response = await httpResponse.Content.ReadAsByteArrayAsync();

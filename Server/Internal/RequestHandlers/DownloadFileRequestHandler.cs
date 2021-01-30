@@ -25,7 +25,7 @@ namespace Server.Internal.RequestHandlers
             {
                 var response = new FileDTO
                 {
-                    Body = await GetFileAsync(fileInfo),
+                    File = await GetFileAsync(fileInfo),
                     ShortFileName = Path.GetFileName(request.Path),
                 };
 
@@ -39,10 +39,10 @@ namespace Server.Internal.RequestHandlers
 
         private async Task<byte[]> GetFileAsync(FileInfo fileInfo)
         {
-            var fileStream = fileInfo.OpenRead();
+            using var fileStream = fileInfo.OpenRead();
 
             var fileBytes = new byte[fileStream.Length];
-            await fileStream.ReadAsync(fileBytes);
+            await fileStream.ReadAsync(fileBytes, offset: 0, count: (int)fileStream.Length);
 
             return fileBytes;
         }

@@ -10,11 +10,11 @@ using System.Text;
 
 namespace Data.Internal.Preprocessors
 {
-    internal abstract class OperationPreprocessor<TRequest, TResponse> : IOperationPreprocessor<TRequest, TResponse>
+    internal abstract class JsonOperationPreprocessor<TRequest, TResponse> : IOperationPreprocessor<TRequest, TResponse>
     {
         private readonly IMapper _mapper;
 
-        public OperationPreprocessor(IMapper mapper)
+        public JsonOperationPreprocessor(IMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

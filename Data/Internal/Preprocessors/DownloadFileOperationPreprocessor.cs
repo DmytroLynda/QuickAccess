@@ -6,7 +6,7 @@ using Server.Enums;
 
 namespace Data.Internal.Preprocessors
 {
-    internal class DownloadFileOperationPreprocessor : OperationPreprocessor<FilePath, File>
+    internal class DownloadFileOperationPreprocessor : JsonOperationPreprocessor<FilePath, FileDTO>
     {
         public DownloadFileOperationPreprocessor(IMapper mapper)
             :base(mapper)
@@ -17,7 +17,7 @@ namespace Data.Internal.Preprocessors
             return Preprocess<FilePathDTO>(request, Query.DownloadFile);
         }
 
-        public override File Preprocess(byte[] responseBytes)
+        public override FileDTO Preprocess(byte[] responseBytes)
         {
            return Preprocess<FileDTO>(responseBytes, ResponseType.File);
         }
