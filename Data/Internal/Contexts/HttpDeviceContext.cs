@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Data.Internal.Interfaces;
-using Server.DTOs.ResponseTypes;
+using Data.Internal.DataTypes;
 
 namespace Data.Internal.Contexts
 {
@@ -48,9 +48,27 @@ namespace Data.Internal.Contexts
             _localDeviceContext = localDeviceContext;
         }
 
-        public async Task DownloadFileAsync(FilePath file)
+        public async Task DownloadFileAsync(FilePath path)
         {
-            await _localDeviceContext.SaveFileAsync(await HttpPostAsync<FilePath, FileDTO>(file));
+            var firstRequest = new FileRequest
+            {
+                Path = path,
+                Chunk = 1
+            };
+            var firstChunk = await HttpPostAsync<FileRequest, FileChunk>(firstRequest);
+            await _localDeviceContext.SaveNewFileChunk(firstChunk.File);
+
+            for (int chunk = 2; chunk <= firstChunk.AmountOfChunks; chunk++)
+            {
+                var nextRequest = new FileRequest
+                {
+                    Path = path,
+                    Chunk = chunk
+                };
+
+                var nextChunk = await HttpPostAsync<FileRequest, FileChunk>(nextRequest);
+                await _localDeviceContext.SaveNextFileChunk(nextChunk.File);
+            }
         }
 
         public async Task<FileInfo> GetFileInfoAsync(FilePath file)

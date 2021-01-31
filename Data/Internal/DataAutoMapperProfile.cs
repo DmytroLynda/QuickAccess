@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Data.Internal.DataTypes;
 using DomainEntities;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
@@ -18,6 +19,10 @@ namespace Data.Internal
             CreateMap<DirectoryPath, DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
 
             CreateMap<PathDTO, Path>().ConvertUsing(pathDTO => MapToPath(pathDTO));
+
+            CreateMap<FileRequest, FileRequestDTO>();
+
+            CreateMap<FileChunkDTO, FileChunk>();
         }
 
         private Path MapToPath(PathDTO pathDTO)

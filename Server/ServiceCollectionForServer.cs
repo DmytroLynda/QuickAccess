@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Server.Internal;
 using Server.Internal.Interfaces;
+using Server.Internal.Options;
 using Server.Internal.RequestHandlers;
 using Server.Internal.Services;
+using System.Net;
 
 namespace Server
 {
@@ -18,8 +20,12 @@ namespace Server
 
             services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
 
+            services.Configure<DownloadFileRequestHandlerOptions>(configuration);
             services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();
+
             services.AddScoped<IRequestHandler, OpenFolderRequestHandler>();
+            
+            services.AddScoped<HttpListener>();
         }
     }
 }

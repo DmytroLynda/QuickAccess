@@ -1,4 +1,4 @@
-﻿namespace Server.Internal
+﻿namespace Server.Internal.Options
 {
     internal class HttpServerOptions
     {

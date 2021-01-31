@@ -1,11 +1,11 @@
-﻿using DomainEntities;
-using Server.DTOs.ResponseTypes;
+﻿using Data.Internal.DataTypes;
 using System.Threading.Tasks;
 
 namespace Data.Internal.Interfaces
 {
-    public interface ILocalDeviceContext
+    internal interface ILocalDeviceContext
     {
-        Task SaveFileAsync(FileDTO file);
+        Task SaveNewFileChunk(File file);
+        Task SaveNextFileChunk(File file);
     }
 }

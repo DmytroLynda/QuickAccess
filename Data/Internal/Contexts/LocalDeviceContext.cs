@@ -1,4 +1,5 @@
 ﻿using Data.Internal;
+using Data.Internal.DataTypes;
 using Data.Internal.Interfaces;
 using Data.Internal.Options;
 using DomainEntities;
@@ -20,11 +21,24 @@ namespace Data.Internal.Contexts
             _saveDirectory = options.Value.SaveDirectory;
         }
 
-        public async Task SaveFileAsync(FileDTO file)
+        public async Task SaveNewFileChunk(File file)
         {
             var fileInfo = new System.IO.FileInfo(_saveDirectory + file.ShortFileName);
             using var fileStream = fileInfo.Create();
-            await fileStream.WriteAsync(file.File);
+            await fileStream.WriteAsync(file.Data);
+
+            await fileStream.FlushAsync();
+        }
+
+        public async Task SaveNextFileChunk(File file)
+        {
+            var fileInfo = new System.IO.FileInfo(_saveDirectory + file.ShortFileName);
+            using var fileStream = fileInfo.OpenWrite();
+
+            fileStream.Position = fileStream.Length;
+            await fileStream.WriteAsync(file.Data);
+
+            await fileStream.FlushAsync();
         }
     }
 }

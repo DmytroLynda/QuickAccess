@@ -5,6 +5,7 @@ using Server.DTOs;
 using Server.DTOs.ResponseTypes;
 using Server.Internal.Exceptions;
 using Server.Internal.Interfaces;
+using Server.Internal.Options;
 using System;
 using System.Linq;
 using System.Net;
@@ -19,17 +20,20 @@ namespace Server.Internal
         private readonly IRequestHandlerFactory _requestHandlerFactory;
         private readonly IAuthenticationService _authenticationService;
         private readonly HttpServerOptions _options;
+        private readonly HttpListener _httpListener;
 
         public HttpServer(
             ILogger<HttpServer> logger,
             IRequestHandlerFactory requestHandlerFactory,
             IAuthenticationService authenticationService,
-            IOptions<HttpServerOptions> options)
+            IOptions<HttpServerOptions> options,
+            HttpListener httpListener)
         {
             _logger = logger;
             _requestHandlerFactory = requestHandlerFactory;
             _authenticationService = authenticationService;
             _options = options.Value;
+            _httpListener = httpListener;
         }
 
         public void Start()
@@ -39,13 +43,12 @@ namespace Server.Internal
 
         public async Task StartAsync()
         {
-            var httpListener = new HttpListener();
-            _options.Prefixes.ToList().ForEach(prefix => httpListener.Prefixes.Add(prefix));
-            httpListener.Start();
+            _options.Prefixes.ToList().ForEach(prefix => _httpListener.Prefixes.Add(prefix));
+            _httpListener.Start();
 
             while (true)
             {
-                var incomingContext = await httpListener.GetContextAsync();
+                var incomingContext = await _httpListener.GetContextAsync();
 
                 try
                 {
@@ -80,8 +83,6 @@ namespace Server.Internal
 
             using var httpResponse = incomingContext.Response;
             await httpResponse.OutputStream.WriteAsync(response);
-
-            response.
         }
 
         private byte[] FormErrorResponse(ServerException exception)
