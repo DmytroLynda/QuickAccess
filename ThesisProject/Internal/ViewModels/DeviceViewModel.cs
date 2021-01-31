@@ -5,23 +5,24 @@ namespace ThesisProject.Internal.ViewModels
 {
     internal class DeviceViewModel: IComparable<DeviceViewModel>
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
         #region Overrides
         public int CompareTo(DeviceViewModel other)
         {
-            return Name.CompareTo(other.Name);
+            return Id.CompareTo(other.Id);
         }
 
         public override bool Equals(object obj)
         {
             return obj is DeviceViewModel dTO &&
-                   Name == dTO.Name;
+                   Id == dTO.Id;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name);
+            return HashCode.Combine(Id);
         }
 
         public override string ToString()
@@ -31,7 +32,7 @@ namespace ThesisProject.Internal.ViewModels
 
         public static bool operator ==(DeviceViewModel left, DeviceViewModel right)
         {
-            return EqualityComparer<DeviceViewModel>.Default.Equals(left, right);
+            return left.Equals(right);
         }
 
         public static bool operator !=(DeviceViewModel left, DeviceViewModel right)

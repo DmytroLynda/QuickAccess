@@ -6,6 +6,6 @@ namespace ClientLogic
 {
     public interface IDeviceService
     {
-        Task<List<Device>> GetDevicesAsync();
+        Task<List<Device>> GetDevicesAsync(User user, Device device);
     }
 }

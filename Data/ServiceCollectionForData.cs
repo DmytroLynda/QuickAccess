@@ -16,8 +16,9 @@ namespace Data
     {
         public static void ConfigureForData(this IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddSingleton<ITrackerService, TrackerContextMock>();
-            services.AddSingleton<ITrackerContext, TrackerContextMock>();
+            services.AddSingleton<TrackerContextMock>();
+            services.AddSingleton<ITrackerService>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
+            services.AddSingleton<ITrackerContext>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
 
             services.Configure<LocalDeviceOptions>(configuration);
             services.AddSingleton<ILocalDeviceContext, LocalDeviceContext>();

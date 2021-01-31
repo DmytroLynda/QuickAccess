@@ -43,7 +43,7 @@ namespace ThesisProject
         protected override async void OnStartup(StartupEventArgs e)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
 
@@ -52,8 +52,8 @@ namespace ThesisProject
 
             ServiceProvider = services.BuildServiceProvider();
 
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
 
             var server = ServiceProvider.GetService<IServer>();
             await server.StartAsync();

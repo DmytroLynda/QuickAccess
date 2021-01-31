@@ -2,6 +2,7 @@
 using ThesisProject.Internal.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Windows.Threading;
+using ThesisProject.Internal.Options;
 
 namespace ThesisProject.Internal
 {

@@ -34,9 +34,12 @@ namespace ThesisProject.Internal.Controllers
             await _fileService.DownloadFileAsync(device, filePath);
         }
 
-        public async Task<List<DeviceViewModel>> GetDevicesAsync()
+        public async Task<List<DeviceViewModel>> GetDevicesAsync(UserViewModel userViewModel, DeviceViewModel deviceViewModel)
         {
-            var devices = await _deviceService.GetDevicesAsync();
+            var user = _mapper.Map<User>(userViewModel);
+            var device = _mapper.Map<Device>(deviceViewModel);
+
+            var devices = await _deviceService.GetDevicesAsync(user, device);
             return _mapper.Map<List<DeviceViewModel>>(devices);
         }
 

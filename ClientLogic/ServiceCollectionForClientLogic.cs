@@ -9,6 +9,7 @@ namespace ClientLogic
         {
             services.AddTransient<IFileService, FileService>();
             services.AddTransient<IDeviceService, DeviceService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
         }
     }
 }

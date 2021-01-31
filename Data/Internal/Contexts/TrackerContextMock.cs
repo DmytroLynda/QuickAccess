@@ -1,4 +1,5 @@
 ﻿using ClientLogic.ExternalInterfaces;
+using Data.Internal.Exceptions;
 using Data.Internal.Interfaces;
 using DomainEntities;
 using System;
@@ -10,19 +11,25 @@ namespace Data.Internal.Contexts
 {
     internal class TrackerContextMock : ITrackerService, ITrackerContext
     {
-        private readonly List<Device> _devices = new List<Device>();
+        private readonly Dictionary<User, List<Device>> _userDevices = new Dictionary<User, List<Device>>();
         private readonly Dictionary<Device, Uri> _uris = new Dictionary<Device, Uri>();
+        private readonly List<User> _registeredUsers = new List<User>();
 
         public TrackerContextMock()
         {
-            _devices.Add(new Device { Id = 1, Name = "Dima" });
-            _devices.Add(new Device { Id = 2, Name = "Julia" });
+            var defaultUser = new User
+            {
+                Login = "Dima",
+                Password = "12345"
+            };
 
-            var dimaUri = new UriBuilder("http", "127.0.0.1", 65432);
-            var juliaUri = new UriBuilder("http", "192.168.0.220", 8080);
+            _registeredUsers.Add(defaultUser);
 
-            _uris.Add(_devices.First(), dimaUri.Uri);
-            _uris.Add(_devices.Skip(1).First(), juliaUri.Uri);
+            var defaulUserDevice = new Device { Id = Guid.NewGuid(), Name = "Dima" };
+            var defaultUserUri = new UriBuilder("http", "127.0.0.1", 65432).Uri;
+
+            _userDevices.Add(defaultUser, new List<Device> { defaulUserDevice });
+            _uris.Add(defaulUserDevice, defaultUserUri);
         }
 
         public async Task<Uri> GetDeviceUriAsync(Device device)
@@ -30,9 +37,57 @@ namespace Data.Internal.Contexts
             return await Task.FromResult(_uris[device]);
         }
 
-        public async Task<List<Device>> GetDevicesAsync()
+        public async Task<List<Device>> GetDevicesAsync(User user, Device device)
         {
-            return await Task.FromResult(_devices);
+            if (LogIn(user, device))
+            {
+                var userDevices = _userDevices[user];
+                return await Task.FromResult(userDevices);
+            }
+
+            throw new AuthenticationException("The user does not exist.");
+        }
+
+        public bool LogIn(User user, Device device)
+        {
+            if (_registeredUsers.Contains(user))
+            {
+                if (_userDevices[user].Contains(device))
+                {
+                    _userDevices[user].First(existingDevice => existingDevice.Equals(device)).Name = device.Name;
+                }
+                else
+                {
+                    _userDevices[user].Add(device);
+
+                    var uri = new UriBuilder("http", "127.0.0.1", 65432).Uri;
+                    _uris.Add(device, uri);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Register(User user, Device firstDevice)
+        {
+            if (LogIn(user, firstDevice))
+            {
+                return false;
+            }
+            else
+            {
+                _registeredUsers.Add(user);
+                _userDevices.Add(user, new List<Device> { firstDevice });
+
+                var uri = new UriBuilder("http", "127.0.0.1", 65432).Uri;
+                _uris.Add(firstDevice, uri);
+
+                return true;
+            }
         }
     }
 }

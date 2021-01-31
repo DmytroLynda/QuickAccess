@@ -14,9 +14,9 @@ namespace ClientLogic.Internal
             _trackerContext = trackerContext;
         }
 
-        public async Task<List<Device>> GetDevicesAsync()
+        public async Task<List<Device>> GetDevicesAsync(User user, Device device)
         {
-            return await _trackerContext.GetDevicesAsync();
+            return await _trackerContext.GetDevicesAsync(user, device);
         }
     }
 }

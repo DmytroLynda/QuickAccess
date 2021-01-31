@@ -13,31 +13,55 @@ namespace ThesisProject.Internal.Windows
     internal partial class MainWindow : Window
     {
         private readonly IMainWindowController _controller;
-
         private readonly IMenuUpdater _menuUpdater;
-
         private readonly IFilesContainer _filesContainer;
         private readonly IDevicesContainer _devicesContainer;
-
         private readonly FileInfoWindow _fileInfoWindow;
+        private readonly IUserLoginProvider _loginProvider;
+        private readonly ICurrentDeviceProvider _currentDeviceProvider;
 
-        public MainWindow(IMainWindowController controller, IMenuUpdater menuUpdater, IFilesContainer filesContainer, IDevicesContainer devicesContainer, FileInfoWindow fileInfoWindow)
+        public MainWindow(
+            IMainWindowController controller,
+            IMenuUpdater menuUpdater,
+            IFilesContainer filesContainer,
+            IDevicesContainer devicesContainer,
+            FileInfoWindow fileInfoWindow,
+            IUserLoginProvider loginProvider,
+            ICurrentDeviceProvider currentDeviceProvider)
         {
             _controller = controller;
             _menuUpdater = menuUpdater;
             _fileInfoWindow = fileInfoWindow;
-
             _filesContainer = filesContainer;
+            _devicesContainer = devicesContainer;
+            _loginProvider = loginProvider;
+            _currentDeviceProvider = currentDeviceProvider;
+
             _filesContainer.OpenDirectory += OnOpenDirectoryAsync;
             _filesContainer.DownloadFile += OnDownloadFileAsync;
             _filesContainer.FileInfo += OnFileInfoAsync;
 
-            _devicesContainer = devicesContainer;
             _devicesContainer.SelectDevice += OnDeviceWasSelectedAsync;
 
             _menuUpdater.Update += OnUpdateMenuAsync;
 
             InitializeComponent();
+        }
+
+        public async Task StartUpdateAsync()
+        {
+            _menuUpdater.Start();
+            await UpdateMenuAsync();
+        }
+
+        protected async override void OnInitialized(EventArgs e)
+        {
+            BackButton.Click += OnBackButtonClickAsync;
+
+            _filesContainer.Initialize(FilesPanel.Children);
+            _devicesContainer.Initialize(DevicesPanel.Children);
+
+            base.OnInitialized(e);
         }
 
         private async void OnBackButtonClickAsync(object sender, RoutedEventArgs e)
@@ -61,19 +85,6 @@ namespace ThesisProject.Internal.Windows
             await _controller.DownloadFileAsync(_devicesContainer.GetSelectedDevice(), filePath);
         }
 
-        protected async override void OnInitialized(EventArgs e)
-        {
-            BackButton.Click += OnBackButtonClickAsync;
-
-            _filesContainer.Initialize(FilesPanel.Children);
-            _devicesContainer.Initialize(DevicesPanel.Children);
-            _menuUpdater.Start();
-
-            await UpdateMenuAsync();
-
-            base.OnInitialized(e);
-        }
-
         private async void OnOpenDirectoryAsync(object sender, DirectoryPathViewModel directory)
         {
             await UpdateFilesMenuAsync(_devicesContainer.GetSelectedDevice(), directory);
@@ -91,7 +102,7 @@ namespace ThesisProject.Internal.Windows
 
         private async Task UpdateMenuAsync()
         {
-            _devicesContainer.Show(await _controller.GetDevicesAsync());
+            _devicesContainer.Show(await _controller.GetDevicesAsync(_loginProvider.User, _currentDeviceProvider.CurrentDevice));
 
             if (_devicesContainer.IsSelectedDevice())
             {

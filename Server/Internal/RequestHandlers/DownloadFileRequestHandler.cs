@@ -66,11 +66,6 @@ namespace Server.Internal.RequestHandlers
             var offset = (chunk - 1) * _options.ChunkSizeInMegabytes * BytesInMegabyte;
 
             var available = fileStream.Length - offset;
-            //if (available < 0)
-            //{
-            //    var lastOffset = (_options.ChunkSizeInMegabytes - 1) * BytesInMegabyte;
-            //    available = fileStream.Length - lastOffset;
-            //}
 
             var chunkInBytes = _options.ChunkSizeInMegabytes * BytesInMegabyte;
             var count = Math.Min(available, chunkInBytes);

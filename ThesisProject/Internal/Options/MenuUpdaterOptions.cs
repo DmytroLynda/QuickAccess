@@ -1,4 +1,4 @@
-﻿namespace ThesisProject.Internal
+﻿namespace ThesisProject.Internal.Options
 {
     internal class MenuUpdaterOptions
     {
