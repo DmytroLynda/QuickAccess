@@ -5,6 +5,7 @@ using Data.Internal.Options;
 using DomainEntities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Server.ExternalInterfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Data.Internal.Contexts
 {
-    internal class UserSettingsContext : IUserSettingsContext
+    internal class UserSettingsContext : IUserSettingsContext, IUserSettingsProvider
     {
         private const string SettingsFileName = "usersettings.json";
         private UserSettingsDTO _userSettings;

@@ -4,6 +4,7 @@ using Server.DTOs;
 using Server.DTOs.RequestTypes;
 using Server.DTOs.ResponseTypes;
 using Server.Enums;
+using Server.ExternalInterfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,33 +17,30 @@ namespace Server.Internal.RequestHandlers
     internal class OpenFolderRequestHandler : RequestHandler
     {
         private readonly ILogger<OpenFolderRequestHandler> _logger;
+        private readonly IUserSettingsProvider _settingsProvider;
 
-        public OpenFolderRequestHandler(ILogger<OpenFolderRequestHandler> logger)
+        public OpenFolderRequestHandler(ILogger<OpenFolderRequestHandler> logger, IUserSettingsProvider settingsProvider)
         {
             _logger = logger;
+            _settingsProvider = settingsProvider;
         }
 
         public override async Task<byte[]> HandleAsync(byte[] requestData)
         {
-            return await Task.Run(() => Handle(requestData));
-        }
-
-        private byte[] Handle(byte[] requestData)
-        {
             var request = GetRequest<DirectoryPathDTO>(requestData);
-            
+
             bool isDrive = string.IsNullOrEmpty(request.Path);
             if (isDrive)
             {
-                return GetDrives();
+                return await GetDrivesAsync();
             }
             else
             {
-                return GetFolder(request.Path);
+                return await GetFolderAsync(request.Path);
             }
         }
 
-        private byte[] GetDrives()
+        private async Task<byte[]> GetDrivesAsync()
         {
             var drives = DriveInfo.GetDrives().Where(drive => drive.IsReady);
 
@@ -51,15 +49,26 @@ namespace Server.Internal.RequestHandlers
                 Value = drive.RootDirectory.FullName 
             });
 
+            responseDrives = await RemoveBlockedAsync(responseDrives);
+
             return FormResponse(responseDrives, ResponseType.Folder);
         }
 
-        private byte[] GetFolder(string path)
+        private async Task<List<PathDTO>> RemoveBlockedAsync(IEnumerable<PathDTO> pathes)
+        {
+            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            
+            return pathes.Where(path => userSettings.BlockedDirectories.All(blockedDirectory => blockedDirectory.Value != path.Value)).ToList();
+        }
+
+        private async Task<byte[]> GetFolderAsync(string path)
         {
             var directoryInfo = new DirectoryInfo(@path);
             if (directoryInfo.Exists)
             {
                 List<PathDTO> responseFolder = GetFolder(directoryInfo);
+                responseFolder = await RemoveBlockedAsync(responseFolder);
+
                 var serializedResponse = JsonConvert.SerializeObject(responseFolder);
                 return FormResponse(ResponseType.Folder, Encoding.UTF8.GetBytes(serializedResponse));
             }
@@ -93,44 +102,6 @@ namespace Server.Internal.RequestHandlers
                 _logger.LogWarning($"An exception was occured when try access to {directoryInfo.FullName}," +
                     $"\nException: {e.GetType()}, message: {e.Message}.");
                 return new List<PathDTO>(0);
-            }
-        }
-
-        private bool IsExist(FileInfo file)
-        {
-            if (!file.Exists ||
-                !file.Attributes.HasFlag(FileAttributes.Hidden))
-            {
-                return false;
-            }
-
-            try
-            {
-                file.OpenRead().Close();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool IsExist(DirectoryInfo directory)
-        {
-            if (!directory.Exists ||
-                !directory.Attributes.HasFlag(FileAttributes.Hidden))
-            {
-                return false;
-            }
-
-            try
-            {
-                directory.GetFileSystemInfos();
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
 

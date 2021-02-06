@@ -8,6 +8,7 @@ using Data.Internal.Preprocessors;
 using DomainEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Server.ExternalInterfaces;
 using System.Collections.Generic;
 
 namespace Data
@@ -23,7 +24,9 @@ namespace Data
             services.Configure<LocalDeviceOptions>(configuration);
             services.AddSingleton<ILocalDeviceContext, LocalDeviceContext>();
 
-            services.AddSingleton<IUserSettingsContext, UserSettingsContext>();
+            services.AddSingleton<UserSettingsContext>();
+            services.AddSingleton<IUserSettingsContext>(serviceProvider => serviceProvider.GetRequiredService<UserSettingsContext>());
+            services.AddSingleton<IUserSettingsProvider>(serviceProvider => serviceProvider.GetRequiredService<UserSettingsContext>());
 
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();
