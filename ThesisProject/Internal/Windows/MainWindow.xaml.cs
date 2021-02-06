@@ -16,26 +16,25 @@ namespace ThesisProject.Internal.Windows
         private readonly IMenuUpdater _menuUpdater;
         private readonly IFilesContainer _filesContainer;
         private readonly IDevicesContainer _devicesContainer;
-        private readonly FileInfoWindow _fileInfoWindow;
         private readonly IUserLoginProvider _loginProvider;
-        private readonly ICurrentDeviceProvider _currentDeviceProvider;
+        private readonly IUserSettingsProvider _settingsProvider;
+
+        public IWindowManager WindowManager { get; set; }
 
         public MainWindow(
             IMainWindowController controller,
             IMenuUpdater menuUpdater,
             IFilesContainer filesContainer,
             IDevicesContainer devicesContainer,
-            FileInfoWindow fileInfoWindow,
             IUserLoginProvider loginProvider,
-            ICurrentDeviceProvider currentDeviceProvider)
+            IUserSettingsProvider currentDeviceProvider)
         {
             _controller = controller;
             _menuUpdater = menuUpdater;
-            _fileInfoWindow = fileInfoWindow;
             _filesContainer = filesContainer;
             _devicesContainer = devicesContainer;
             _loginProvider = loginProvider;
-            _currentDeviceProvider = currentDeviceProvider;
+            _settingsProvider = currentDeviceProvider;
 
             _filesContainer.OpenDirectory += OnOpenDirectoryAsync;
             _filesContainer.DownloadFile += OnDownloadFileAsync;
@@ -43,7 +42,7 @@ namespace ThesisProject.Internal.Windows
 
             _devicesContainer.SelectDevice += OnDeviceWasSelectedAsync;
 
-            _menuUpdater.Update += OnUpdateMenuAsync;
+            _menuUpdater.AddUpdater(OnUpdateMenuAsync);
 
             InitializeComponent();
         }
@@ -54,7 +53,7 @@ namespace ThesisProject.Internal.Windows
             await UpdateMenuAsync();
         }
 
-        protected async override void OnInitialized(EventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             BackButton.Click += OnBackButtonClickAsync;
 
@@ -72,12 +71,19 @@ namespace ThesisProject.Internal.Windows
             await UpdateFilesMenuAsync(_filesContainer.CurentDevice, _filesContainer.CurentDirectory);
         }
 
+        private void OnLogOutButtonClick(object sender, RoutedEventArgs e)
+        {
+            _menuUpdater.Stop();
+            _loginProvider.User.Password = null;
+
+            WindowManager.ShowLoginWindow(this);
+        }
+
         private async void OnFileInfoAsync(object sender, FilePathViewModel filePath)
         {
             var fileInfo = await _controller.GetFileInfoAsync(filePath);
 
-            _fileInfoWindow.DataContext = fileInfo;
-            _fileInfoWindow.Show();
+            WindowManager.ShowFileInfoWindow(fileInfo);
         }
 
         private async void OnDownloadFileAsync(object sender, FilePathViewModel filePath)
@@ -102,7 +108,10 @@ namespace ThesisProject.Internal.Windows
 
         private async Task UpdateMenuAsync()
         {
-            _devicesContainer.Show(await _controller.GetDevicesAsync(_loginProvider.User, _currentDeviceProvider.CurrentDevice));
+            UserNameLabel.Content = _loginProvider.User.Login;
+
+            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            _devicesContainer.Show(await _controller.GetDevicesAsync(_loginProvider.User, userSettings.CurrentDevice));
 
             if (_devicesContainer.IsSelectedDevice())
             {
@@ -130,6 +139,11 @@ namespace ThesisProject.Internal.Windows
             _filesContainer.CurentDevice = device;
             _filesContainer.CurentDirectory = directory;
             _filesContainer.Show(await _controller.GetDirectoryAsync(directory, device));
+        }
+
+        private void ConfigurationButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowManager.ShowConfigurationWindow();
         }
     }
 }

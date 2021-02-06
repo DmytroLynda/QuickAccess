@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThesisProject.Internal.Windows"
         mc:Ignorable="d"
-        Title="QuickAccess - Log In" Height="284" Width="289">
+        Title="QuickAccess - Log In" Height="300" Width="300" ResizeMode="NoResize">
     <Grid Margin="0,0,0,3">
         <TextBox Name="LoginTextBox" HorizontalAlignment="Center" Margin="0,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="269" Height="30"/>
         <TextBox Name="PasswordTextBox" HorizontalAlignment="Center" Margin="0,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="269" Height="30"/>

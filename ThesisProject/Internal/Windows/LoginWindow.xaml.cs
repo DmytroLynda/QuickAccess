@@ -22,18 +22,18 @@ namespace ThesisProject.Internal.Windows
     internal partial class LoginWindow : Window
     {
         private readonly IUserLoginProvider _loginProvider;
-        private readonly ICurrentDeviceProvider _currentDevice;
+        private readonly IUserSettingsProvider _settingsProvider;
         private readonly ILoginWindowController _controller;
-        private readonly MainWindow _mainWindow;
 
-        public LoginWindow(IUserLoginProvider loginProvider, ICurrentDeviceProvider currentDevice, ILoginWindowController controller, MainWindow mainWindow)
+        public IWindowManager WindowManager { get; set; }
+
+        public LoginWindow(IUserLoginProvider loginProvider, IUserSettingsProvider usetSettings, ILoginWindowController controller)
         {
             InitializeComponent();
 
             _loginProvider = loginProvider;
-            _currentDevice = currentDevice;
+            _settingsProvider = usetSettings;
             _controller = controller;
-            _mainWindow = mainWindow;
         }
 
         #region events
@@ -53,7 +53,8 @@ namespace ThesisProject.Internal.Windows
                 Password = PasswordTextBox.Text
             };
             
-            if (_controller.LogIn(user, _currentDevice.CurrentDevice))
+            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            if (_controller.LogIn(user, userSettings.CurrentDevice))
             {
                 _loginProvider.User = user;
                 await GoToMainWindowAsync();
@@ -64,19 +65,38 @@ namespace ThesisProject.Internal.Windows
             }
         }
 
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(LoginTextBox.Text) ||
+                string.IsNullOrEmpty(PasswordTextBox.Text))
+            {
+                MessageBox.Show("Login and password fields can't be empty.");
+                return;
+            }
 
+            var newUser = new UserViewModel
+            {
+                Login = LoginTextBox.Text,
+                Password = PasswordTextBox.Text
+            };
+
+            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            if (_controller.Register(newUser, userSettings.CurrentDevice))
+            {
+                _loginProvider.User = newUser;
+                await GoToMainWindowAsync();
+            }
+            else
+            {
+                MessageBox.Show("User with this name exists.");
+            }
         }
 
         #endregion
 
         private async Task GoToMainWindowAsync()
         {
-            await _mainWindow.StartUpdateAsync();
-            _mainWindow.Show();
-
-            this.Close();
+            await WindowManager.ShowMainWindowAsync(this);
         }
     }
 }

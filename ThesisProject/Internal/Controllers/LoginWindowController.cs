@@ -24,5 +24,13 @@ namespace ThesisProject.Internal.Controllers
 
             return _authenticationService.LogIn(user, currentDevice);
         }
+
+        public bool Register(UserViewModel newUserViewModel, DeviceViewModel currentDeviceViewModel)
+        {
+            var newUser = _mapper.Map<User>(newUserViewModel);
+            var currentDevice = _mapper.Map<Device>(currentDeviceViewModel);
+
+            return _authenticationService.Register(newUser, currentDevice);
+        }
     }
 }

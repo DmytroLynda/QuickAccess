@@ -7,8 +7,9 @@ using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Interfaces
 {
-    internal interface ICurrentDeviceProvider
+    internal interface IUserSettingsProvider
     {
-        DeviceViewModel CurrentDevice { get; }
+        Task<UserSettingsViewModel> GetUserSettingsAsync();
+        Task SetUserSettingsAsync(UserSettingsViewModel userSettings);
     }
 }

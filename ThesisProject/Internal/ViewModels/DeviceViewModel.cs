@@ -16,13 +16,14 @@ namespace ThesisProject.Internal.ViewModels
 
         public override bool Equals(object obj)
         {
-            return obj is DeviceViewModel dTO &&
-                   Id == dTO.Id;
+            return obj is DeviceViewModel device &&
+                   Id == device.Id &&
+                   Name == device.Name;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id);
+            return HashCode.Combine(Id, Name);
         }
 
         public override string ToString()

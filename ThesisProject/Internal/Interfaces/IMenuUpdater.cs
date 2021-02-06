@@ -4,7 +4,7 @@ namespace ThesisProject.Internal.Interfaces
 {
     internal interface IMenuUpdater
     {
-        event EventHandler Update;
+        void AddUpdater(EventHandler updater);
         void Start();
         void Stop();
     }

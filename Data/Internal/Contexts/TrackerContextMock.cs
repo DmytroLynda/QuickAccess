@@ -15,23 +15,6 @@ namespace Data.Internal.Contexts
         private readonly Dictionary<Device, Uri> _uris = new Dictionary<Device, Uri>();
         private readonly List<User> _registeredUsers = new List<User>();
 
-        public TrackerContextMock()
-        {
-            var defaultUser = new User
-            {
-                Login = "Dima",
-                Password = "12345"
-            };
-
-            _registeredUsers.Add(defaultUser);
-
-            var defaulUserDevice = new Device { Id = Guid.NewGuid(), Name = "Dima" };
-            var defaultUserUri = new UriBuilder("http", "127.0.0.1", 65432).Uri;
-
-            _userDevices.Add(defaultUser, new List<Device> { defaulUserDevice });
-            _uris.Add(defaulUserDevice, defaultUserUri);
-        }
-
         public async Task<Uri> GetDeviceUriAsync(Device device)
         {
             return await Task.FromResult(_uris[device]);
@@ -72,16 +55,16 @@ namespace Data.Internal.Contexts
             }
         }
 
-        public bool Register(User user, Device firstDevice)
+        public bool Register(User newUser, Device firstDevice)
         {
-            if (LogIn(user, firstDevice))
+            if (_registeredUsers.Any(user => user.Login == newUser.Login))
             {
                 return false;
             }
             else
             {
-                _registeredUsers.Add(user);
-                _userDevices.Add(user, new List<Device> { firstDevice });
+                _registeredUsers.Add(newUser);
+                _userDevices.Add(newUser, new List<Device> { firstDevice });
 
                 var uri = new UriBuilder("http", "127.0.0.1", 65432).Uri;
                 _uris.Add(firstDevice, uri);

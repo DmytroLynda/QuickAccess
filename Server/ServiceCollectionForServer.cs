@@ -21,11 +21,11 @@ namespace Server
             services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
 
             services.Configure<DownloadFileRequestHandlerOptions>(configuration);
-            services.AddScoped<IRequestHandler, DownloadFileRequestHandler>();
+            services.AddTransient<IRequestHandler, DownloadFileRequestHandler>();
 
-            services.AddScoped<IRequestHandler, OpenFolderRequestHandler>();
+            services.AddTransient<IRequestHandler, OpenFolderRequestHandler>();
             
-            services.AddScoped<HttpListener>();
+            services.AddTransient<HttpListener>();
         }
     }
 }

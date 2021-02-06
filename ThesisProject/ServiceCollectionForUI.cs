@@ -14,14 +14,14 @@ namespace ThesisProject
     {
         public static void ConfigureForUI(this IServiceCollection services, IConfigurationSection configuration)
         {
-            services.Configure<MenuUpdaterOptions>(configuration, binder => binder.BindNonPublicProperties = true);
-            services.AddScoped<MainWindow>();
+            services.Configure<MenuUpdaterOptions>(configuration);
 
-            services.AddScoped<LoginWindow>();
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<LoginWindow>();
+            services.AddTransient<ConfigurationWindow>();
+            services.AddTransient<FileInfoWindow>();
 
-            services.AddScoped<FileInfoWindow>();
-
-            services.AddScoped<IMenuUpdater, MenuUpdater>();
+            services.AddTransient<IMenuUpdater, MenuUpdater>();
 
             services.AddSingleton<IDevicesContainer, DevicesContainer>();
             services.AddSingleton<IFilesContainer, FilesContainer>();
@@ -31,8 +31,10 @@ namespace ThesisProject
 
             services.AddSingleton<IUserLoginProvider, UserLoginProvider>();
 
-            services.Configure<CurrentDeviceOptions>(configuration);
-            services.AddSingleton<ICurrentDeviceProvider, CurrentDeviceProvider>();
+            services.AddSingleton<IUserSettingsProvider, UserSettingsProvider>();
+
+            services.AddSingleton<IWindowManager, WindowManager>();
+
         }
     }
 }

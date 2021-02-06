@@ -10,5 +10,6 @@ namespace ThesisProject.Internal.Interfaces
     internal interface ILoginWindowController
     {
         bool LogIn(UserViewModel user, DeviceViewModel currentDevice);
+        bool Register(UserViewModel newUser, DeviceViewModel currentDevice);
     }
 }

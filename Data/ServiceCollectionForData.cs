@@ -26,10 +26,10 @@ namespace Data
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();
 
-            services.AddScoped<IOperationPreprocessor<FileRequest, FileChunk>, DownloadFileOperationPreprocessor>();
-            services.AddScoped<IOperationPreprocessor<DirectoryPath, List<Path>>, OpenFolderOperationPreprocessor>();
+            services.AddTransient<IOperationPreprocessor<FileRequest, FileChunk>, DownloadFileOperationPreprocessor>();
+            services.AddTransient<IOperationPreprocessor<DirectoryPath, List<Path>>, OpenFolderOperationPreprocessor>();
 
-            services.AddScoped<HttpDeviceContext>();
+            services.AddTransient<HttpDeviceContext>();
         }
     }
 }

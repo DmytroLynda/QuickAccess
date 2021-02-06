@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Server;
 using System;
 using System.Windows;
+using ThesisProject.Internal.Interfaces;
 using ThesisProject.Internal.Windows;
 
 namespace ThesisProject
@@ -52,10 +53,10 @@ namespace ThesisProject
 
             ServiceProvider = services.BuildServiceProvider();
 
-            var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
-            loginWindow.Show();
+            var windowManager = ServiceProvider.GetRequiredService<IWindowManager>();
+            windowManager.ShowLoginWindow(caller: null);
 
-            var server = ServiceProvider.GetService<IServer>();
+            var server = ServiceProvider.GetRequiredService<IServer>();
             await server.StartAsync();
         }
     }
