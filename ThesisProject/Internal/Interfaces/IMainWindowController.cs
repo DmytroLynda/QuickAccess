@@ -6,10 +6,10 @@ namespace ThesisProject.Internal.Interfaces
 {
     internal interface IMainWindowController
     {
-        Task<List<DeviceViewModel>> GetDevicesAsync(UserViewModel userViewModel, DeviceViewModel deviceViewModel);
+        Task<List<DeviceViewModel>> GetDevicesAsync(UserViewModel user, DeviceViewModel device);
         Task<List<PathViewModel>> GetDirectoryAsync(DirectoryPathViewModel directory, DeviceViewModel device);
-        Task DownloadFileAsync(DeviceViewModel deviceViewModel, FilePathViewModel filePath);
-        Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath);
+        Task DownloadFileAsync(FilePathViewModel filePath, DeviceViewModel device);
+        Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath, DeviceViewModel device);
         Task<UserSettingsViewModel> GetUserSettingsAsync();
     }
 }

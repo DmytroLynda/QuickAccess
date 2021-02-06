@@ -53,7 +53,7 @@ namespace ThesisProject
 
             ServiceProvider = services.BuildServiceProvider();
 
-            var windowManager = ServiceProvider.GetRequiredService<IWindowManager>();
+            var windowManager = ServiceProvider.GetRequiredService<IWindowsManager>();
             windowManager.ShowLoginWindow(caller: null);
 
             var server = ServiceProvider.GetRequiredService<IServer>();

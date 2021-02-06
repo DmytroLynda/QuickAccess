@@ -17,6 +17,7 @@ namespace ThesisProject.Internal
             CreateMap<Path, PathViewModel>();
 
             CreateMap<FilePathViewModel, FilePath>().ForMember(member => member.Value, options => options.MapFrom(src => src.Path));
+            CreateMap<FileInfo, FileInfoViewModel>();
 
             CreateMap<UserViewModel, User>();
 

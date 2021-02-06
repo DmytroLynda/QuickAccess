@@ -3,6 +3,7 @@
     public enum Query
     {
         DownloadFile,
-        OpenFolder
+        OpenFolder,
+        GetFileInfo
     }
 }

@@ -8,12 +8,25 @@ namespace ThesisProject.Internal.Helpers
     {
         public static bool IsDirectory(this string path)
         {
-            return !Path.HasExtension(path);
+            bool isFile = IsFile(path);
+            bool isDrive = IsDrive(path);
+            
+            return !isFile && !isDrive;
         }
 
         public static bool IsDirectory(this PathViewModel path)
         {
-            return !Path.HasExtension(path.Value);
+            return path.Value.IsDirectory();
+        }
+
+        public static bool IsDrive(this PathViewModel path)
+        {
+            return path.Value.IsDrive();
+        }
+
+        public static bool IsDrive(this string path)
+        {
+            return path.EndsWith(@":\");
         }
 
         public static bool IsFile(this string path)
@@ -58,13 +71,12 @@ namespace ThesisProject.Internal.Helpers
 
         public static PathViewModel GetName(this PathViewModel path)
         {
-            if (path.IsFile())
+            if (path.IsFile() || path.IsDirectory())
             {
-                return new PathViewModel { Value = Path.GetFileName(path.Value) };
-            }
-            else if(path.IsDirectory() && !Path.IsPathRooted(path.Value))
-            {
-                return new PathViewModel { Value = Path.GetDirectoryName(path.Value) };
+                var preparedPath = Path.TrimEndingDirectorySeparator(path.Value);
+                var pathName = preparedPath.Remove(startIndex: 0, count: path.Value.LastIndexOf('\\') + 1);
+
+                return new PathViewModel(pathName);
             }
             else
             {
@@ -84,16 +96,24 @@ namespace ThesisProject.Internal.Helpers
             }
         }
 
-        public static DirectoryPathViewModel Back(this DirectoryPathViewModel directory)
+        public static DirectoryPathViewModel GetParrent(this DirectoryPathViewModel directory)
         {
-            var oneBackDirectory = Directory.GetParent(directory.Path);
-
-            if (oneBackDirectory is null)
+            string parrentDirectory;
+            if (string.IsNullOrWhiteSpace(directory.Path) ||
+                directory.Path.IsDrive())
             {
-                return new DirectoryPathViewModel { Path = string.Empty };
+                parrentDirectory = string.Empty;
+            }
+            else if(directory.Path.IsDirectory())
+            {
+                parrentDirectory = Directory.GetParent(directory.Path).FullName;
+            }
+            else
+            {
+                throw new ArgumentException("Passed directory is not a directory or a drive.");
             }
 
-            return new DirectoryPathViewModel { Path = oneBackDirectory.FullName };
+            return new DirectoryPathViewModel { Path = parrentDirectory };
         }
     }
 }

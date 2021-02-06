@@ -33,6 +33,7 @@ namespace Data
 
             services.AddTransient<IOperationPreprocessor<FileRequest, FileChunk>, DownloadFileOperationPreprocessor>();
             services.AddTransient<IOperationPreprocessor<DirectoryPath, List<Path>>, OpenFolderOperationPreprocessor>();
+            services.AddTransient<IOperationPreprocessor<FilePath, FileInfo>, GetFileInfoOperationPreprocessor>();
 
             services.AddTransient<HttpDeviceContext>();
         }

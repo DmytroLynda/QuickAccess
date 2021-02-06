@@ -13,7 +13,7 @@ namespace ThesisProject.Internal.Windows
         private readonly IUserLoginProvider _loginProvider;
         private readonly ILoginWindowController _controller;
 
-        public IWindowManager WindowManager { get; set; }
+        public IWindowsManager WindowsManager { get; set; }
 
         public LoginWindow(IUserLoginProvider loginProvider, ILoginWindowController controller)
         {
@@ -83,7 +83,7 @@ namespace ThesisProject.Internal.Windows
 
         private async Task GoToMainWindowAsync()
         {
-            await WindowManager.ShowMainWindowAsync(this);
+            await WindowsManager.ShowMainWindowAsync(this);
         }
     }
 }

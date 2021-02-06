@@ -24,7 +24,8 @@ namespace Server
             services.AddTransient<IRequestHandler, DownloadFileRequestHandler>();
 
             services.AddTransient<IRequestHandler, OpenFolderRequestHandler>();
-            
+            services.AddTransient<IRequestHandler, GetFileInfoRequestHandler>();
+
             services.AddTransient<HttpListener>();
         }
     }

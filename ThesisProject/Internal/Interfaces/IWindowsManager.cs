@@ -4,7 +4,7 @@ using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Interfaces
 {
-    internal interface IWindowManager
+    internal interface IWindowsManager
     {
         Task ShowMainWindowAsync(Window caller);
         void ShowLoginWindow(Window caller);

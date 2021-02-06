@@ -28,7 +28,7 @@ namespace ThesisProject.Internal.Controllers
             _deviceService = deviceService;
         }
 
-        public async Task DownloadFileAsync(DeviceViewModel deviceViewModel, FilePathViewModel filePathViewModel)
+        public async Task DownloadFileAsync(FilePathViewModel filePathViewModel, DeviceViewModel deviceViewModel)
         {
             var device = _mapper.Map<Device>(deviceViewModel);
             var filePath = _mapper.Map<FilePath>(filePathViewModel);
@@ -45,15 +45,23 @@ namespace ThesisProject.Internal.Controllers
             return _mapper.Map<List<DeviceViewModel>>(devices);
         }
 
-        public async Task<List<PathViewModel>> GetDirectoryAsync(DirectoryPathViewModel directory, DeviceViewModel device)
+        public async Task<List<PathViewModel>> GetDirectoryAsync(DirectoryPathViewModel directoryViewModel, DeviceViewModel deviceViewModel)
         {
-            var pathes = await _fileService.ShowDirectoryAsync(_mapper.Map<Device>(device), _mapper.Map<DirectoryPath>(directory));
+            var directory = _mapper.Map<DirectoryPath>(directoryViewModel);
+            var device = _mapper.Map<Device>(deviceViewModel);
+
+            var pathes = await _fileService.ShowDirectoryAsync(device, directory);
             return _mapper.Map<List<PathViewModel>>(pathes);
         }
 
-        public Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath)
+        public async Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePathViewModel, DeviceViewModel deviceViewModel)
         {
-            throw new System.NotImplementedException();
+            var filePath = _mapper.Map<FilePath>(filePathViewModel);
+            var device = _mapper.Map<Device>(deviceViewModel);
+
+            var fileInfo = await _fileService.GetFileInfoAsync(device, filePath);
+
+            return _mapper.Map<FileInfoViewModel>(fileInfo);
         }
 
         public async Task<UserSettingsViewModel> GetUserSettingsAsync()

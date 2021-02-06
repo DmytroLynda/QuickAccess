@@ -33,7 +33,7 @@ namespace ThesisProject
 
             services.AddSingleton<IUserLoginProvider, UserLoginProvider>();
 
-            services.AddSingleton<IWindowManager, WindowManager>();
+            services.AddSingleton<IWindowsManager, WindowsManager>();
         }
     }
 }

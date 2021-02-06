@@ -16,7 +16,7 @@ namespace Data.Internal.Preprocessors
 
         public JsonOperationPreprocessor(IMapper mapper)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mapper = mapper;
         }
 
         public abstract byte[] Preprocess(TRequest request);
@@ -57,7 +57,7 @@ namespace Data.Internal.Preprocessors
             }
             else
             {
-                throw new InvalidOperationException($"Unknown response type: {response.Type}");
+                throw new InvalidOperationException($"Unknown response type for this operation: {response.Type}. Expected: {responseType}");
             }
         }
     }

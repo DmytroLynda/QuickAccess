@@ -4,6 +4,7 @@
     {
         Error,
         File,
-        Folder
+        Folder,
+        FileInfo
     }
 }

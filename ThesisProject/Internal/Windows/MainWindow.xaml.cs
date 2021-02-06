@@ -18,7 +18,7 @@ namespace ThesisProject.Internal.Windows
         private readonly IDevicesContainer _devicesContainer;
         private readonly IUserLoginProvider _loginProvider;
 
-        public IWindowManager WindowManager { get; set; }
+        public IWindowsManager WindowsManager { get; set; }
 
         public MainWindow(
             IMainWindowController controller,
@@ -62,7 +62,7 @@ namespace ThesisProject.Internal.Windows
 
         private async void OnBackButtonClickAsync(object sender, RoutedEventArgs e)
         {
-            var previousDirectory = _filesContainer.CurentDirectory.Back();
+            var previousDirectory = _filesContainer.CurentDirectory.GetParrent();
             _filesContainer.CurentDirectory = previousDirectory;
 
             await UpdateFilesMenuAsync(_filesContainer.CurentDevice, _filesContainer.CurentDirectory);
@@ -73,19 +73,24 @@ namespace ThesisProject.Internal.Windows
             _menuUpdater.Stop();
             _loginProvider.User.Password = null;
 
-            WindowManager.ShowLoginWindow(this);
+            WindowsManager.ShowLoginWindow(this);
+        }
+
+        private void ConfigurationButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowsManager.ShowConfigurationWindow();
         }
 
         private async void OnFileInfoAsync(object sender, FilePathViewModel filePath)
         {
-            var fileInfo = await _controller.GetFileInfoAsync(filePath);
+            var fileInfo = await _controller.GetFileInfoAsync(filePath, _devicesContainer.GetSelectedDevice());
 
-            WindowManager.ShowFileInfoWindow(fileInfo);
+            WindowsManager.ShowFileInfoWindow(fileInfo);
         }
 
         private async void OnDownloadFileAsync(object sender, FilePathViewModel filePath)
         {
-            await _controller.DownloadFileAsync(_devicesContainer.GetSelectedDevice(), filePath);
+            await _controller.DownloadFileAsync(filePath, _devicesContainer.GetSelectedDevice());
         }
 
         private async void OnOpenDirectoryAsync(object sender, DirectoryPathViewModel directory)
@@ -136,11 +141,6 @@ namespace ThesisProject.Internal.Windows
             _filesContainer.CurentDevice = device;
             _filesContainer.CurentDirectory = directory;
             _filesContainer.Show(await _controller.GetDirectoryAsync(directory, device));
-        }
-
-        private void ConfigurationButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowManager.ShowConfigurationWindow();
         }
     }
 }

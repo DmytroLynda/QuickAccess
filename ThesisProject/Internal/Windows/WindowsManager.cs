@@ -7,7 +7,7 @@ using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Windows
 {
-    internal class WindowManager : IWindowManager
+    internal class WindowsManager : IWindowsManager
     {
         private readonly LoginWindow _loginWindow;
         private readonly MainWindow _mainWindow;
@@ -29,7 +29,7 @@ namespace ThesisProject.Internal.Windows
             }
         }
 
-        public WindowManager(
+        public WindowsManager(
             LoginWindow loginWindow,
             MainWindow mainWindow,
             IServiceProvider serviceProvider)
@@ -38,8 +38,8 @@ namespace ThesisProject.Internal.Windows
             _mainWindow = mainWindow;
             _serviceProvider = serviceProvider;
 
-            _loginWindow.WindowManager = this;
-            _mainWindow.WindowManager = this;
+            _loginWindow.WindowsManager = this;
+            _mainWindow.WindowsManager = this;
         }
 
         public void ShowConfigurationWindow()
@@ -49,7 +49,7 @@ namespace ThesisProject.Internal.Windows
 
         public void ShowFileInfoWindow(FileInfoViewModel fileInfo)
         {
-            FileInfoWindow.Show();
+            FileInfoWindow.Show(fileInfo);
         }
 
         public void ShowLoginWindow(Window caller)

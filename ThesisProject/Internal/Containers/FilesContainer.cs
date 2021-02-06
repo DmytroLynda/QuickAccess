@@ -57,7 +57,7 @@ namespace ThesisProject.Internal.Containers
         {
             var fullPath = path.JoinAsRoot(CurentDirectory);
 
-            if (path.IsDirectory())
+            if (path.IsDirectory() || path.IsDrive())
             {
                 OpenDirectory(this, fullPath.ToDirectoryPath());
             }
