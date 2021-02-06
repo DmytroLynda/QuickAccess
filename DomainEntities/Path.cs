@@ -1,12 +1,7 @@
 ﻿namespace DomainEntities
 {
-    public class Path
+    public abstract class Path
     {
-        public string Value { get; set; }
-
-        public override string ToString()
-        {
-            return Value;
-        }
+        public string Value { get; protected set; }
     }
 }

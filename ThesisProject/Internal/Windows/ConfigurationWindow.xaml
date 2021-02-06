@@ -1,0 +1,30 @@
+﻿<Window x:Class="ThesisProject.Internal.Windows.ConfigurationWindow"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ThesisProject.Internal.Windows"
+        mc:Ignorable="d"
+        Title="QuickAccess - Configuration" Height="420" Width="500" ResizeMode="NoResize">
+    <Grid HorizontalAlignment="Center" Width="494" Height="385" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="122*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="184*"/>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="186*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Save" Name="SaveConfigurationButton" Margin="96,129,0,0" HorizontalAlignment="Left" Width="138" Height="47" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Click="SaveConfigurationButtonClickAsync"/>
+        <TextBox x:Name="DeviceNameTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,240,148" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="155" Grid.ColumnSpan="3"/>
+        <Label Content="Device name: " HorizontalAlignment="Right" Margin="0,0,156,148" VerticalAlignment="Bottom"/>
+        <Label Content="Blocked directories: " HorizontalAlignment="Right" Margin="0,0,124,111" VerticalAlignment="Bottom"/>
+        <Button Content="Add" x:Name="AddBlockedDirectory" Margin="0,129,102,10" HorizontalAlignment="Right" Width="138" Grid.Row="3" Click="AddBlockedDirectory_Click"/>
+        <Button Content="Remove" x:Name="RemoveBlockedDirectory" Margin="0,129,175,10" HorizontalAlignment="Right" Width="138" Grid.Row="3" Grid.ColumnSpan="3" Click="RemoveBlockedDirectory_Click"/>
+        <ListBox x:Name="BlockedDirectoriesListBox" Grid.ColumnSpan="3" Margin="0,0,10,62" Grid.RowSpan="4" HorizontalAlignment="Right" Width="474" Height="245" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
