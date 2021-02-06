@@ -7,7 +7,6 @@ using Server;
 using System;
 using System.Windows;
 using ThesisProject.Internal.Interfaces;
-using ThesisProject.Internal.Windows;
 
 namespace ThesisProject
 {

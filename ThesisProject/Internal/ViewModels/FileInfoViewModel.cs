@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ThesisProject.Internal.ViewModels
+﻿namespace ThesisProject.Internal.ViewModels
 {
     internal class FileInfoViewModel
     {
