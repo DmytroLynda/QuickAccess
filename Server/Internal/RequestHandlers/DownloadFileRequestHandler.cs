@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Server.DTOs.RequestTypes;
-using Server.DTOs.ResponseTypes;
-using Server.Enums;
-using Server.Internal.Options;
+using ServerInterface.DTOs.ResponseTypes;
+using ServerInterface.DTOs.RequestTypes;
+using ServerInterface.Enums;
+using ServerInterface.Internal.Options;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Server.Internal.RequestHandlers
+namespace ServerInterface.Internal.RequestHandlers
 {
     internal class DownloadFileRequestHandler : RequestHandler
     {

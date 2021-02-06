@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using DomainEntities;
-using Server.DTOs.RequestTypes;
-using Server.Enums;
-using System;
+using ServerInterface.DTOs.RequestTypes;
+using ServerInterface.Enums;
 
 namespace Data.Internal.Preprocessors
 {

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
-namespace Server.Internal.Exceptions
+namespace ServerInterface.Internal.Exceptions
 {
     public class ServerException : Exception
     {

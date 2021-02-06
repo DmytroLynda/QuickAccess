@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Server.Internal.Exceptions
+namespace ServerInterface.Internal.Exceptions
 {
     internal class RequestHandlerDoesNotExistException : Exception
     {

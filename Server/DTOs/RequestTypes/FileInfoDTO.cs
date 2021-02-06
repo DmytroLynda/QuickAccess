@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Server.DTOs.RequestTypes
+namespace ServerInterface.DTOs.RequestTypes
 {
     public class FileInfoDTO
     {

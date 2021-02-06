@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DomainEntities;
-using Server.DTOs.RequestTypes;
+using ServerInterface.DTOs.RequestTypes;
 
-namespace Data.Internal
+namespace ServerInterface.Internal
 {
-    internal class DataAutoMapperProfile: Profile
+    internal class DataAutoMapperProfile : Profile
     {
         public DataAutoMapperProfile()
         {

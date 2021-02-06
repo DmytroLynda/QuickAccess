@@ -1,6 +1,6 @@
-﻿using Server.Enums;
+﻿using ServerInterface.Enums;
 
-namespace Server.DTOs
+namespace ServerInterface.DTOs
 {
     public class ResponseDTO
     {

@@ -1,18 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Server.DTOs;
-using Server.DTOs.ResponseTypes;
-using Server.Internal.Exceptions;
-using Server.Internal.Interfaces;
-using Server.Internal.Options;
+using ServerInterface.DTOs;
+using ServerInterface.DTOs.ResponseTypes;
+using ServerInterface.Enums;
+using ServerInterface.Internal.Exceptions;
+using ServerInterface.Internal.Interfaces;
+using ServerInterface.Internal.Options;
 using System;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Internal
+namespace ServerInterface.Internal
 {
     internal class HttpServer : IServer
     {
@@ -67,12 +68,12 @@ namespace Server.Internal
 
             byte[] response;
             try
-            { 
+            {
                 var requesterEndPoint = incomingContext.Request.RemoteEndPoint;
                 _authenticationService.Authenticate(requesterEndPoint);
 
                 var request = await GetRequest(httpRequest);
-            
+
                 var requestHandler = _requestHandlerFactory.Create(request.Query);
                 response = await requestHandler.HandleAsync(request.Data);
             }
@@ -96,7 +97,7 @@ namespace Server.Internal
 
             var response = new ResponseDTO
             {
-                Type = Enums.ResponseType.Error,
+                Type = ResponseType.Error,
                 Data = errorsBytes,
             };
 

@@ -1,6 +1,6 @@
-﻿using Server.Enums;
+﻿using ServerInterface.Enums;
 
-namespace Server.Internal.Interfaces
+namespace ServerInterface.Internal.Interfaces
 {
     internal interface IRequestHandlerFactory
     {

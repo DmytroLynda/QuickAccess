@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
-using Server.DTOs;
-using Server.Enums;
+using ServerInterface.DTOs;
+using ServerInterface.Enums;
+using ServerInterface.Internal.Interfaces;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Internal.RequestHandlers
+namespace ServerInterface.Internal.RequestHandlers
 {
     internal abstract class RequestHandler : IRequestHandler
     {

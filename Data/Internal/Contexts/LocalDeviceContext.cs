@@ -1,13 +1,7 @@
-﻿using Data.Internal;
-using Data.Internal.DataTypes;
+﻿using Data.Internal.DataTypes;
 using Data.Internal.Interfaces;
 using Data.Internal.Options;
-using DomainEntities;
 using Microsoft.Extensions.Options;
-using Server.DTOs.ResponseTypes;
-using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Data.Internal.Contexts

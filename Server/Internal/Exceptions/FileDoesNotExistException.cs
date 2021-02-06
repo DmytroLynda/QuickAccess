@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Server.Internal.Exceptions
+namespace ServerInterface.Internal.Exceptions
 {
     internal class FileDoesNotExistException : Exception
     {

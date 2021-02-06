@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Server
+namespace ServerInterface
 {
     public interface IServer
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Server
+namespace ServerInterface.Internal.Interfaces
 {
     internal interface IRequestHandler
     {

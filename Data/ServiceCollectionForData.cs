@@ -8,7 +8,7 @@ using Data.Internal.Preprocessors;
 using DomainEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Server.ExternalInterfaces;
+using ServerInterface.ExternalInterfaces;
 using System.Collections.Generic;
 
 namespace Data

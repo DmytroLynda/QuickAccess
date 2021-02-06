@@ -3,7 +3,7 @@ using ClientLogic;
 using Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Server;
+using ServerInterface;
 using System;
 using System.Windows;
 using ThesisProject.Internal.Interfaces;

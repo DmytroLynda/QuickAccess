@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Server.Enums;
-using Server.Internal.Interfaces;
 using System.Linq;
 using System;
-using Server.Internal.Exceptions;
+using ServerInterface.Enums;
+using ServerInterface.Internal.Interfaces;
+using ServerInterface.Internal.Exceptions;
 
-namespace Server.Internal
+namespace ServerInterface.Internal
 {
     internal class RequestHandlerFactory : IRequestHandlerFactory
     {

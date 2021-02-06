@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-
-namespace Server.DTOs.ResponseTypes
+﻿namespace ServerInterface.DTOs.ResponseTypes
 {
     public class FileDTO
     {

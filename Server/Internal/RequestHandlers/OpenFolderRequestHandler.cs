@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Server.DTOs;
-using Server.DTOs.RequestTypes;
-using Server.DTOs.ResponseTypes;
-using Server.Enums;
-using Server.ExternalInterfaces;
+using ServerInterface.DTOs;
+using ServerInterface.DTOs.RequestTypes;
+using ServerInterface.DTOs.ResponseTypes;
+using ServerInterface.Enums;
+using ServerInterface.ExternalInterfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Internal.RequestHandlers
+namespace ServerInterface.Internal.RequestHandlers
 {
     internal class OpenFolderRequestHandler : RequestHandler
     {
@@ -44,9 +44,9 @@ namespace Server.Internal.RequestHandlers
         {
             var drives = DriveInfo.GetDrives().Where(drive => drive.IsReady);
 
-            var responseDrives = drives.Select(drive => new PathDTO 
-            { 
-                Value = drive.RootDirectory.FullName 
+            var responseDrives = drives.Select(drive => new PathDTO
+            {
+                Value = drive.RootDirectory.FullName
             });
 
             responseDrives = await RemoveBlockedAsync(responseDrives);
@@ -57,7 +57,7 @@ namespace Server.Internal.RequestHandlers
         private async Task<List<PathDTO>> RemoveBlockedAsync(IEnumerable<PathDTO> pathes)
         {
             var userSettings = await _settingsProvider.GetUserSettingsAsync();
-            
+
             return pathes.Where(path => userSettings.BlockedDirectories.All(blockedDirectory => blockedDirectory.Value != path.Value)).ToList();
         }
 
@@ -81,7 +81,7 @@ namespace Server.Internal.RequestHandlers
         private List<PathDTO> GetFolder(DirectoryInfo directoryInfo)
         {
             try
-            { 
+            {
                 var directoryInfos = directoryInfo
                     .GetDirectories()
                     .Where(directory => directory.Exists && !directory.Attributes.HasFlag(FileAttributes.Hidden))
@@ -97,7 +97,7 @@ namespace Server.Internal.RequestHandlers
                 folder.AddRange(fileInfos);
                 return folder;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogWarning($"An exception was occured when try access to {directoryInfo.FullName}," +
                     $"\nException: {e.GetType()}, message: {e.Message}.");

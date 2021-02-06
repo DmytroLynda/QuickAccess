@@ -1,7 +1,6 @@
-﻿using Server.Internal.Exceptions;
-using System;
+﻿using ServerInterface.Internal.Exceptions;
 
-namespace Server.DTOs.ResponseTypes
+namespace ServerInterface.DTOs.ResponseTypes
 {
     public class ErrorDTO
     {

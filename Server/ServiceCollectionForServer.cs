@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Server.Internal;
-using Server.Internal.Interfaces;
-using Server.Internal.Options;
-using Server.Internal.RequestHandlers;
-using Server.Internal.Services;
+using ServerInterface.Internal;
+using ServerInterface.Internal.Interfaces;
+using ServerInterface.Internal.Options;
+using ServerInterface.Internal.RequestHandlers;
+using ServerInterface.Internal.Services;
 using System.Net;
 
-namespace Server
+namespace ServerInterface
 {
     public static class ServiceCollectionForServer
     {

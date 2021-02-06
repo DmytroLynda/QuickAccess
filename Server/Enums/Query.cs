@@ -1,4 +1,4 @@
-﻿namespace Server.Enums
+﻿namespace ServerInterface.Enums
 {
     public enum Query
     {

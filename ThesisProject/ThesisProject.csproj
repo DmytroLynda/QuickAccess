@@ -21,7 +21,7 @@
     <ProjectReference Include="..\ClientLogic\ClientLogic.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\DomainEntities\DomainEntities.csproj" />
-    <ProjectReference Include="..\Server\Server.csproj" />
+    <ProjectReference Include="..\Server\ServerInterface.csproj" />
   </ItemGroup>
 
   <ItemGroup>

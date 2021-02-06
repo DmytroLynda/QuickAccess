@@ -1,14 +1,10 @@
-﻿using Server.DTOs.RequestTypes;
-using Server.Enums;
-using Server.Internal.Exceptions;
-using System;
-using System.Collections.Generic;
+﻿using ServerInterface.DTOs.RequestTypes;
+using ServerInterface.Enums;
+using ServerInterface.Internal.Exceptions;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Internal.RequestHandlers
+namespace ServerInterface.Internal.RequestHandlers
 {
     internal class GetFileInfoRequestHandler : RequestHandler
     {

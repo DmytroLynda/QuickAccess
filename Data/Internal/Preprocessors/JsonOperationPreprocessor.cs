@@ -2,9 +2,9 @@
 using Data.Internal.Exceptions;
 using Data.Internal.Interfaces;
 using Newtonsoft.Json;
-using Server.DTOs;
-using Server.DTOs.ResponseTypes;
-using Server.Enums;
+using ServerInterface.DTOs;
+using ServerInterface.DTOs.ResponseTypes;
+using ServerInterface.Enums;
 using System;
 using System.Text;
 

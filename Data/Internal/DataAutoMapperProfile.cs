@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Data.Internal.DataTypes;
 using DomainEntities;
-using Server.DTOs.RequestTypes;
-using Server.DTOs.ResponseTypes;
-using System;
-using System.Linq;
+using ServerInterface.DTOs.RequestTypes;
+using ServerInterface.DTOs.ResponseTypes;
 
 namespace Data.Internal
 {
@@ -16,7 +14,7 @@ namespace Data.Internal
 
             CreateMap<FileInfoDTO, FileInfo>();
 
-            CreateMap<DirectoryPath, Server.DTOs.RequestTypes.DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
+            CreateMap<DirectoryPath, ServerInterface.DTOs.RequestTypes.DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
 
             CreateMap<PathDTO, Path>().ConvertUsing(pathDTO => MapToPath(pathDTO));
 

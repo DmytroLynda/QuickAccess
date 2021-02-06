@@ -1,4 +1,4 @@
-﻿namespace Server.DTOs.ResponseTypes
+﻿namespace ServerInterface.DTOs.ResponseTypes
 {
     public class PathDTO
     {

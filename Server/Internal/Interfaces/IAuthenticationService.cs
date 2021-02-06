@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Server.Internal.Interfaces
+namespace ServerInterface.Internal.Interfaces
 {
     public interface IAuthenticationService
     {
