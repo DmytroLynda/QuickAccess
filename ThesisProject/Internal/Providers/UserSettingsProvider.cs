@@ -77,7 +77,8 @@ namespace ThesisProject.Internal.Providers
         {
             return new UserSettingsViewModel
             {
-                CurrentDevice = MakeNewDevice()
+                CurrentDevice = MakeNewDevice(),
+                BlockedDirectories = new DirectoryPathViewModel[0]
             };
         }
 
@@ -113,6 +114,9 @@ namespace ThesisProject.Internal.Providers
 
         private static async Task WriteSettingsAsync(FileStream settingsStream, UserSettingsViewModel newSettings)
         {
+            //Clear the setting file for rewrite settings.
+            settingsStream.SetLength(0);
+
             var serializedNewSettings = JsonConvert.SerializeObject(newSettings);
             var newSettingsBytes = Encoding.UTF8.GetBytes(serializedNewSettings);
             await settingsStream.WriteAsync(newSettingsBytes);

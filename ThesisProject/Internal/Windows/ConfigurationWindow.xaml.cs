@@ -11,7 +11,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using ThesisProject.Internal.Helpers;
 using ThesisProject.Internal.Interfaces;
+using ThesisProject.Internal.ViewModels;
+using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace ThesisProject.Internal.Windows
 {
@@ -35,9 +39,25 @@ namespace ThesisProject.Internal.Windows
 
             var userSettings = await _settingsProvider.GetUserSettingsAsync();
 
-            DeviceNameTextBox.Text = userSettings.CurrentDevice.Name;
+            SetCurrentDeviceName(userSettings.CurrentDevice.Name);
+
+            SetBlockedDirectories(userSettings.BlockedDirectories);
         }
 
+        private void SetCurrentDeviceName(string deviceName)
+        {
+            DeviceNameTextBox.Text = deviceName;
+        }
+
+        private void SetBlockedDirectories(DirectoryPathViewModel[] blockedDirectories)
+        {
+            BlockedDirectoriesListBox.Items.Clear();
+
+            foreach (var blockedDirectory in blockedDirectories)
+            {
+                BlockedDirectoriesListBox.Items.Add(blockedDirectory.Path);
+            }
+        }
 
         private async void SaveConfigurationButtonClickAsync(object sender, RoutedEventArgs e)
         {
@@ -50,6 +70,39 @@ namespace ThesisProject.Internal.Windows
             }
 
             this.Close();
+        }
+
+        private async void AddBlockedDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            using var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                var userSettings = await _settingsProvider.GetUserSettingsAsync();
+                var blockedDirectories = userSettings.BlockedDirectories.ToList();
+
+                blockedDirectories.Add(new DirectoryPathViewModel(dialog.SelectedPath));
+
+                userSettings.BlockedDirectories = blockedDirectories.ToArray();
+                await _settingsProvider.SetUserSettingsAsync(userSettings);
+
+                SetBlockedDirectories(blockedDirectories.ToArray());
+            }
+        }
+
+        private async void RemoveBlockedDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            if (BlockedDirectoriesListBox.SelectedItem is not null)
+            {
+                var selectedDirectory = new DirectoryPathViewModel(BlockedDirectoriesListBox.SelectedItem as string);
+
+                BlockedDirectoriesListBox.Items.Remove(BlockedDirectoriesListBox.SelectedItem);
+
+                var userSettings = await _settingsProvider.GetUserSettingsAsync();
+                userSettings.BlockedDirectories = userSettings.BlockedDirectories.Except(selectedDirectory).ToArray();
+                await _settingsProvider.SetUserSettingsAsync(userSettings);
+            }
         }
     }
 }

@@ -16,20 +16,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="184*"/>
             <RowDefinition Height="0*"/>
-            <RowDefinition Height="201*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="186*"/>
         </Grid.RowDefinitions>
-        <Button Content="Save" Name="SaveConfigurationButton" Margin="96,144,0,0" HorizontalAlignment="Left" Width="138" Height="47" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Click="SaveConfigurationButtonClickAsync"/>
+        <Button Content="Save" Name="SaveConfigurationButton" Margin="96,129,0,0" HorizontalAlignment="Left" Width="138" Height="47" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Click="SaveConfigurationButtonClickAsync"/>
         <TextBox x:Name="DeviceNameTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,240,148" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="155" Grid.ColumnSpan="3"/>
         <Label Content="Device name: " HorizontalAlignment="Right" Margin="0,0,156,148" VerticalAlignment="Bottom"/>
-        <ListView Grid.ColumnSpan="3" Margin="0,0,10,62" Grid.RowSpan="3" HorizontalAlignment="Right" Width="474" Height="245" VerticalAlignment="Bottom">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path = Directory}" Width="474">Directory</GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
         <Label Content="Blocked directories: " HorizontalAlignment="Right" Margin="0,0,124,111" VerticalAlignment="Bottom"/>
-        <Button Content="Add" x:Name="AddBlockedDirectory" Margin="0,144,102,10" HorizontalAlignment="Right" Width="138" Grid.Row="2"/>
-        <Button Content="Remove" x:Name="RemoveBlockedDirectory" Margin="0,144,175,10" HorizontalAlignment="Right" Width="138" Grid.Row="2" Grid.ColumnSpan="3"/>
+        <Button Content="Add" x:Name="AddBlockedDirectory" Margin="0,129,102,10" HorizontalAlignment="Right" Width="138" Grid.Row="3" Click="AddBlockedDirectory_Click"/>
+        <Button Content="Remove" x:Name="RemoveBlockedDirectory" Margin="0,129,175,10" HorizontalAlignment="Right" Width="138" Grid.Row="3" Grid.ColumnSpan="3" Click="RemoveBlockedDirectory_Click"/>
+        <ListBox x:Name="BlockedDirectoriesListBox" Grid.ColumnSpan="3" Margin="0,0,10,62" Grid.RowSpan="4" HorizontalAlignment="Right" Width="474" Height="245" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>
