@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClientLogic;
 using DomainEntities;
+using System.Threading.Tasks;
 using ThesisProject.Internal.Interfaces;
 using ThesisProject.Internal.ViewModels;
 
@@ -10,11 +11,18 @@ namespace ThesisProject.Internal.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMapper _mapper;
+        private readonly IUserSettingsController _userSettingsController;
 
-        public LoginWindowController(IAuthenticationService authenticationService, IMapper mapper)
+        public LoginWindowController(IAuthenticationService authenticationService, IMapper mapper, IUserSettingsController userSettingsController)
         {
             _authenticationService = authenticationService;
             _mapper = mapper;
+            _userSettingsController = userSettingsController;
+        }
+
+        public async Task<UserSettingsViewModel> GetUserSettingsAsync()
+        {
+            return await _userSettingsController.GetUserSettingsAsync();
         }
 
         public bool LogIn(UserViewModel userViewModel, DeviceViewModel currentDeviceViewModel)

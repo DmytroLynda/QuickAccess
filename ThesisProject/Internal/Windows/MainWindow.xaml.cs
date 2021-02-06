@@ -17,7 +17,6 @@ namespace ThesisProject.Internal.Windows
         private readonly IFilesContainer _filesContainer;
         private readonly IDevicesContainer _devicesContainer;
         private readonly IUserLoginProvider _loginProvider;
-        private readonly IUserSettingsProvider _settingsProvider;
 
         public IWindowManager WindowManager { get; set; }
 
@@ -26,15 +25,13 @@ namespace ThesisProject.Internal.Windows
             IMenuUpdater menuUpdater,
             IFilesContainer filesContainer,
             IDevicesContainer devicesContainer,
-            IUserLoginProvider loginProvider,
-            IUserSettingsProvider currentDeviceProvider)
+            IUserLoginProvider loginProvider)
         {
             _controller = controller;
             _menuUpdater = menuUpdater;
             _filesContainer = filesContainer;
             _devicesContainer = devicesContainer;
             _loginProvider = loginProvider;
-            _settingsProvider = currentDeviceProvider;
 
             _filesContainer.OpenDirectory += OnOpenDirectoryAsync;
             _filesContainer.DownloadFile += OnDownloadFileAsync;
@@ -110,7 +107,7 @@ namespace ThesisProject.Internal.Windows
         {
             UserNameLabel.Content = _loginProvider.User.Login;
 
-            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            var userSettings = await _controller.GetUserSettingsAsync();
             _devicesContainer.Show(await _controller.GetDevicesAsync(_loginProvider.User, userSettings.CurrentDevice));
 
             if (_devicesContainer.IsSelectedDevice())

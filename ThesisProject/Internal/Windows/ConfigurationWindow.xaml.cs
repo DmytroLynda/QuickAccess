@@ -24,11 +24,11 @@ namespace ThesisProject.Internal.Windows
     /// </summary>
     internal partial class ConfigurationWindow : Window
     {
-        private readonly IUserSettingsProvider _settingsProvider;
+        private readonly IConfigurationWindowController _controller;
 
-        public ConfigurationWindow(IUserSettingsProvider settingsProvider)
+        public ConfigurationWindow(IConfigurationWindowController controller)
         {
-            _settingsProvider = settingsProvider;
+            _controller = controller;
 
             InitializeComponent();
         }   
@@ -37,7 +37,7 @@ namespace ThesisProject.Internal.Windows
         {
             base.OnInitialized(e);
 
-            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            var userSettings = await _controller.GetUserSettingsAsync();
 
             SetCurrentDeviceName(userSettings.CurrentDevice.Name);
 
@@ -49,7 +49,7 @@ namespace ThesisProject.Internal.Windows
             DeviceNameTextBox.Text = deviceName;
         }
 
-        private void SetBlockedDirectories(DirectoryPathViewModel[] blockedDirectories)
+        private void SetBlockedDirectories(List<DirectoryPathViewModel> blockedDirectories)
         {
             BlockedDirectoriesListBox.Items.Clear();
 
@@ -61,47 +61,45 @@ namespace ThesisProject.Internal.Windows
 
         private async void SaveConfigurationButtonClickAsync(object sender, RoutedEventArgs e)
         {
-            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            var userSettings = await _controller.GetUserSettingsAsync();
 
             if (!string.IsNullOrEmpty(DeviceNameTextBox.Text))
             {
                 userSettings.CurrentDevice.Name = DeviceNameTextBox.Text;
-                await _settingsProvider.SetUserSettingsAsync(userSettings);
             }
+
+            if (BlockedDirectoriesListBox.Items.Count > 0)
+            {
+                var blockedDirectories = new List<DirectoryPathViewModel>();
+                foreach (var directory in BlockedDirectoriesListBox.Items)
+                {
+                    blockedDirectories.Add(new DirectoryPathViewModel(directory.ToString()));
+                }
+
+                userSettings.BlockedDirectories = blockedDirectories;
+            }
+
+            await _controller.SetUserSettingsAsync(userSettings);
 
             this.Close();
         }
 
-        private async void AddBlockedDirectory_Click(object sender, RoutedEventArgs e)
+        private void AddBlockedDirectory_Click(object sender, RoutedEventArgs e)
         {
             using var dialog = new FolderBrowserDialog();
             var result = dialog.ShowDialog();
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                var userSettings = await _settingsProvider.GetUserSettingsAsync();
-                var blockedDirectories = userSettings.BlockedDirectories.ToList();
-
-                blockedDirectories.Add(new DirectoryPathViewModel(dialog.SelectedPath));
-
-                userSettings.BlockedDirectories = blockedDirectories.ToArray();
-                await _settingsProvider.SetUserSettingsAsync(userSettings);
-
-                SetBlockedDirectories(blockedDirectories.ToArray());
+                BlockedDirectoriesListBox.Items.Add(dialog.SelectedPath);
             }
         }
 
-        private async void RemoveBlockedDirectory_Click(object sender, RoutedEventArgs e)
+        private void RemoveBlockedDirectory_Click(object sender, RoutedEventArgs e)
         {
             if (BlockedDirectoriesListBox.SelectedItem is not null)
             {
-                var selectedDirectory = new DirectoryPathViewModel(BlockedDirectoriesListBox.SelectedItem as string);
-
                 BlockedDirectoriesListBox.Items.Remove(BlockedDirectoriesListBox.SelectedItem);
-
-                var userSettings = await _settingsProvider.GetUserSettingsAsync();
-                userSettings.BlockedDirectories = userSettings.BlockedDirectories.Except(selectedDirectory).ToArray();
-                await _settingsProvider.SetUserSettingsAsync(userSettings);
             }
         }
     }

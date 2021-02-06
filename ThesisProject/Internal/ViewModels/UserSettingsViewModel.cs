@@ -9,6 +9,6 @@ namespace ThesisProject.Internal.ViewModels
     internal class UserSettingsViewModel
     {
         public DeviceViewModel CurrentDevice { get; set; }
-        public DirectoryPathViewModel[] BlockedDirectories { get; set; }
+        public List<DirectoryPathViewModel> BlockedDirectories { get; set; }
     }
 }

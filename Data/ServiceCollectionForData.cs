@@ -23,6 +23,8 @@ namespace Data
             services.Configure<LocalDeviceOptions>(configuration);
             services.AddSingleton<ILocalDeviceContext, LocalDeviceContext>();
 
+            services.AddSingleton<IUserSettingsContext, UserSettingsContext>();
+
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();
 

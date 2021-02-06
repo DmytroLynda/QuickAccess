@@ -11,5 +11,6 @@ namespace ThesisProject.Internal.Interfaces
     {
         bool LogIn(UserViewModel user, DeviceViewModel currentDevice);
         bool Register(UserViewModel newUser, DeviceViewModel currentDevice);
+        Task<UserSettingsViewModel> GetUserSettingsAsync();
     }
 }

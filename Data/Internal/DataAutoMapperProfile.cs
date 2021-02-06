@@ -16,13 +16,22 @@ namespace Data.Internal
 
             CreateMap<FileInfoDTO, FileInfo>();
 
-            CreateMap<DirectoryPath, DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
+            CreateMap<DirectoryPath, Server.DTOs.RequestTypes.DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
 
             CreateMap<PathDTO, Path>().ConvertUsing(pathDTO => MapToPath(pathDTO));
 
             CreateMap<FileRequest, FileRequestDTO>();
 
             CreateMap<FileChunkDTO, FileChunk>();
+
+            CreateMap<UserSettings, UserSettingsDTO>();
+            CreateMap<UserSettingsDTO, UserSettings>();
+
+            CreateMap<Device, DeviceDTO>();
+            CreateMap<DeviceDTO, Device>();
+
+            CreateMap<DirectoryPath, DataTypes.DirectoryPathDTO>().ForMember(value => value.Path, options => options.MapFrom(src => src.Value));
+            CreateMap<DataTypes.DirectoryPathDTO, DirectoryPath>().ForMember(value => value.Value, options => options.MapFrom(src => src.Path));
         }
 
         private Path MapToPath(PathDTO pathDTO)

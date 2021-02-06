@@ -22,17 +22,15 @@ namespace ThesisProject.Internal.Windows
     internal partial class LoginWindow : Window
     {
         private readonly IUserLoginProvider _loginProvider;
-        private readonly IUserSettingsProvider _settingsProvider;
         private readonly ILoginWindowController _controller;
 
         public IWindowManager WindowManager { get; set; }
 
-        public LoginWindow(IUserLoginProvider loginProvider, IUserSettingsProvider usetSettings, ILoginWindowController controller)
+        public LoginWindow(IUserLoginProvider loginProvider, ILoginWindowController controller)
         {
             InitializeComponent();
 
             _loginProvider = loginProvider;
-            _settingsProvider = usetSettings;
             _controller = controller;
         }
 
@@ -53,7 +51,7 @@ namespace ThesisProject.Internal.Windows
                 Password = PasswordTextBox.Text
             };
             
-            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            var userSettings = await _controller.GetUserSettingsAsync();
             if (_controller.LogIn(user, userSettings.CurrentDevice))
             {
                 _loginProvider.User = user;
@@ -80,7 +78,7 @@ namespace ThesisProject.Internal.Windows
                 Password = PasswordTextBox.Text
             };
 
-            var userSettings = await _settingsProvider.GetUserSettingsAsync();
+            var userSettings = await _controller.GetUserSettingsAsync();
             if (_controller.Register(newUser, userSettings.CurrentDevice))
             {
                 _loginProvider.User = newUser;

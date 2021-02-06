@@ -44,7 +44,8 @@ namespace ThesisProject
         protected override async void OnStartup(StartupEventArgs e)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("usersettings.json", optional: true, reloadOnChange: true);
 
             Configuration = builder.Build();
 

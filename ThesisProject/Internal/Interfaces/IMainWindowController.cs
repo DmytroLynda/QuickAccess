@@ -10,5 +10,6 @@ namespace ThesisProject.Internal.Interfaces
         Task<List<PathViewModel>> GetDirectoryAsync(DirectoryPathViewModel directory, DeviceViewModel device);
         Task DownloadFileAsync(DeviceViewModel deviceViewModel, FilePathViewModel filePath);
         Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath);
+        Task<UserSettingsViewModel> GetUserSettingsAsync();
     }
 }

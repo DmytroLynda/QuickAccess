@@ -1,51 +1,60 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using ClientLogic.ExternalInterfaces;
+using Data.Internal.DataTypes;
+using Data.Internal.Options;
+using DomainEntities;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ThesisProject.Internal.Interfaces;
-using ThesisProject.Internal.ViewModels;
 
-namespace ThesisProject.Internal.Providers
+namespace Data.Internal.Contexts
 {
-    internal class UserSettingsProvider: IUserSettingsProvider
+    internal class UserSettingsContext : IUserSettingsContext
     {
         private const string SettingsFileName = "usersettings.json";
-        private UserSettingsViewModel _userSettings;
+        private UserSettingsDTO _userSettings;
 
+        private readonly ILogger<UserSettingsContext> _logger;
+        private readonly IMapper _mapper;
 
-        #region Private properties
-        #endregion
+        public UserSettingsContext(ILogger<UserSettingsContext> logger, IMapper mapper)
+        {
+            _logger = logger;
+            _mapper = mapper;
+        }
 
         #region Public methods
-        public async Task<UserSettingsViewModel> GetUserSettingsAsync()
+        public async Task<UserSettings> GetUserSettingsAsync()
         {
             if (_userSettings is null)
             {
                 _userSettings = await ReadSettingsAsync();
             }
 
-            return _userSettings;
+            return _mapper.Map<UserSettings>(_userSettings);
         }
 
-        public async Task SetUserSettingsAsync(UserSettingsViewModel userSettings)
+        public async Task SetUserSettingsAsync(UserSettings userSettings)
         {
             if (userSettings is null)
             {
                 throw new ArgumentNullException(nameof(userSettings));
             }
+            _userSettings = _mapper.Map<UserSettingsDTO>(userSettings);
 
-            await WriteSettingsAsync(userSettings);
+            await WriteSettingsAsync(_mapper.Map<UserSettingsDTO>(_userSettings));
         }
-       
+
         #endregion
 
         #region Private methods
-        private async Task<UserSettingsViewModel> ReadSettingsAsync()
+        private async Task<UserSettingsDTO> ReadSettingsAsync()
         {
-            var settingsFileInfo = new FileInfo(SettingsFileName);
+            var settingsFileInfo = new System.IO.FileInfo(SettingsFileName);
             if (!settingsFileInfo.Exists)
             {
                 settingsFileInfo.Create().Close();
@@ -65,29 +74,29 @@ namespace ThesisProject.Internal.Providers
             return settings;
         }
 
-        private async Task WriteSettingsAsync(UserSettingsViewModel userSettings)
+        private async Task WriteSettingsAsync(UserSettingsDTO userSettings)
         {
-            var settingsInfo = new FileInfo(SettingsFileName);
+            var settingsInfo = new System.IO.FileInfo(SettingsFileName);
             using var settingsStream = settingsInfo.OpenWrite();
 
             await WriteSettingsAsync(settingsStream, userSettings);
         }
 
-        private UserSettingsViewModel MakeNewSettings()
+        private UserSettingsDTO MakeNewSettings()
         {
-            return new UserSettingsViewModel
+            return new UserSettingsDTO
             {
                 CurrentDevice = MakeNewDevice(),
-                BlockedDirectories = new DirectoryPathViewModel[0]
+                BlockedDirectories = new List<DirectoryPathDTO>()
             };
         }
 
-        private DeviceViewModel MakeNewDevice()
+        private DeviceDTO MakeNewDevice()
         {
             var newId = Guid.NewGuid();
             var newIdString = newId.ToString().Substring(newId.ToString().Length - 5);
 
-            return new DeviceViewModel
+            return new DeviceDTO
             {
                 Id = newId,
                 Name = "Device:" + newIdString
@@ -96,15 +105,17 @@ namespace ThesisProject.Internal.Providers
         #endregion
 
         #region Static methods
-        private static async Task<UserSettingsViewModel> ReadSettingsAsync(FileStream settingsStream)
+        private static async Task<UserSettingsDTO> ReadSettingsAsync(FileStream settingsStream)
         {
             try
-            { 
+            {
                 var settingsBytes = new byte[settingsStream.Length];
                 await settingsStream.ReadAsync(settingsBytes, offset: 0, (int)settingsStream.Length);
                 var serializedSettings = Encoding.UTF8.GetString(settingsBytes);
-                var settings = JsonConvert.DeserializeObject<UserSettingsViewModel>(serializedSettings);
-                return settings;
+                var settings = JsonConvert.DeserializeObject<UserSettingsOption>(serializedSettings);
+                settingsStream.Position = 0;
+
+                return settings?.UserSettings;
             }
             catch
             {
@@ -112,15 +123,17 @@ namespace ThesisProject.Internal.Providers
             }
         }
 
-        private static async Task WriteSettingsAsync(FileStream settingsStream, UserSettingsViewModel newSettings)
+        private static async Task WriteSettingsAsync(FileStream settingsStream, UserSettingsDTO newSettings)
         {
             //Clear the setting file for rewrite settings.
             settingsStream.SetLength(0);
 
-            var serializedNewSettings = JsonConvert.SerializeObject(newSettings);
-            var newSettingsBytes = Encoding.UTF8.GetBytes(serializedNewSettings);
-            await settingsStream.WriteAsync(newSettingsBytes);
+            var userSettings = new UserSettingsOption(newSettings);
+            var serializedSettings = JsonConvert.SerializeObject(userSettings);
+            var settingsBytes = Encoding.UTF8.GetBytes(serializedSettings);
+            await settingsStream.WriteAsync(settingsBytes);
             await settingsStream.FlushAsync();
+            settingsStream.Position = 0;
         }
 
         #endregion

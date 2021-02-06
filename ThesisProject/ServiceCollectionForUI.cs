@@ -28,13 +28,12 @@ namespace ThesisProject
 
             services.AddSingleton<IMainWindowController, MainWindowController>();
             services.AddSingleton<ILoginWindowController, LoginWindowController>();
+            services.AddSingleton<IUserSettingsController, UserSettingsController>();
+            services.AddSingleton<IConfigurationWindowController, ConfigurationWindowController>();
 
             services.AddSingleton<IUserLoginProvider, UserLoginProvider>();
 
-            services.AddSingleton<IUserSettingsProvider, UserSettingsProvider>();
-
             services.AddSingleton<IWindowManager, WindowManager>();
-
         }
     }
 }

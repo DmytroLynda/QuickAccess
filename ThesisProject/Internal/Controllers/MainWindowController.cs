@@ -13,14 +13,16 @@ namespace ThesisProject.Internal.Controllers
     {
         private readonly ILogger<MainWindowController> _logger;
         private readonly IMapper _mapper;
+        private readonly IUserSettingsController _userSettingsController;
 
         private readonly IFileService _fileService;
         private readonly IDeviceService _deviceService;
 
-        public MainWindowController(ILogger<MainWindowController> logger, IFileService fileService, IDeviceService deviceService, IMapper mapper)
+        public MainWindowController(ILogger<MainWindowController> logger, IFileService fileService, IDeviceService deviceService, IMapper mapper, IUserSettingsController userSettingsController)
         {
             _logger = logger;
             _mapper = mapper;
+            _userSettingsController = userSettingsController;
 
             _fileService = fileService;
             _deviceService = deviceService;
@@ -52,6 +54,11 @@ namespace ThesisProject.Internal.Controllers
         public Task<FileInfoViewModel> GetFileInfoAsync(FilePathViewModel filePath)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<UserSettingsViewModel> GetUserSettingsAsync()
+        {
+            return await _userSettingsController.GetUserSettingsAsync();
         }
     }
 }

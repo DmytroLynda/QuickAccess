@@ -7,8 +7,9 @@ using ThesisProject.Internal.ViewModels;
 
 namespace ThesisProject.Internal.Interfaces
 {
-    internal class IUserLoginProvider
+    internal interface IConfigurationWindowController
     {
-        public UserViewModel User { get; set; }
+        Task<UserSettingsViewModel> GetUserSettingsAsync();
+        Task SetUserSettingsAsync(UserSettingsViewModel userSettings);
     }
 }
