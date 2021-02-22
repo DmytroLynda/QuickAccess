@@ -4,77 +4,42 @@ using ServerInterface.DTOs.ResponseTypes;
 using ServerInterface.DTOs.RequestTypes;
 using ServerInterface.Enums;
 using ServerInterface.Internal.Options;
-using System;
 using System.IO;
 using System.Threading.Tasks;
+using ServerLogic;
+using AutoMapper;
+using DomainEntities;
 
 namespace ServerInterface.Internal.RequestHandlers
 {
     internal class DownloadFileRequestHandler : RequestHandler
     {
-        private const int BytesInMegabyte = 1048576;
-
         private readonly ILogger<DownloadFileRequestHandler> _logger;
         private readonly DownloadFileRequestHandlerOptions _options;
+        private readonly IDownloadFileService _service;
+        private readonly IMapper _mapper;
 
-        public DownloadFileRequestHandler(ILogger<DownloadFileRequestHandler> logger, IOptions<DownloadFileRequestHandlerOptions> options)
+        public DownloadFileRequestHandler(
+            ILogger<DownloadFileRequestHandler> logger,
+            IOptions<DownloadFileRequestHandlerOptions> options, 
+            IDownloadFileService service,
+            IMapper mapper)
         {
             _logger = logger;
             _options = options.Value;
+            _service = service;
+            _mapper = mapper;
         }
 
         public override async Task<byte[]> HandleAsync(byte[] requestData)
         {
-            var request = GetRequest<FileRequestDTO>(requestData);
+            var requestDto = GetRequest<FileRequestDTO>(requestData);
+            var request = _mapper.Map<FileRequest>(requestDto);
 
-            var fileInfo = new FileInfo(request.Path.Path);
-            if (fileInfo.Exists)
-            {
-                var responseFile = new FileDTO
-                {
-                    Data = await GetFileChunkAsync(fileInfo, request.Chunk),
-                    ShortFileName = Path.GetFileName(request.Path.Path),
-                };
+            var response = await _service.DownloadFileAsync(request, _options.ChunkSizeInMegabytes);
+            var responseDto = _mapper.Map<FileChunkDTO>(response);
 
-                var response = new FileChunkDTO
-                {
-                    File = responseFile,
-                    AmountOfChunks = GetAmountOfChunks(fileInfo)
-                };
-
-                return FormResponse(response, ResponseType.File);
-            }
-            else
-            {
-                throw new FileNotFoundException(request.Path.Path);
-            }
-        }
-
-        private int GetAmountOfChunks(FileInfo fileInfo)
-        {
-            var fileLength = fileInfo.Length;
-
-            double chunks = (double)fileLength / (_options.ChunkSizeInMegabytes * BytesInMegabyte);
-
-            return (int)Math.Ceiling(chunks);
-        }
-
-        private async Task<byte[]> GetFileChunkAsync(FileInfo fileInfo, int chunk)
-        {
-            using var fileStream = fileInfo.OpenRead();
-
-            var offset = (chunk - 1) * _options.ChunkSizeInMegabytes * BytesInMegabyte;
-
-            var available = fileStream.Length - offset;
-
-            var chunkInBytes = _options.ChunkSizeInMegabytes * BytesInMegabyte;
-            var count = Math.Min(available, chunkInBytes);
-
-            var fileBytes = new byte[count];
-            fileStream.Position = offset;
-            await fileStream.ReadAsync(fileBytes, offset: 0, (int)count);
-
-            return fileBytes;
+            return FormResponse(responseDto, ResponseType.File);
         }
     }
 }

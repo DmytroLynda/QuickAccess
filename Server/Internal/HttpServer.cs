@@ -7,6 +7,7 @@ using ServerInterface.Enums;
 using ServerInterface.Internal.Exceptions;
 using ServerInterface.Internal.Interfaces;
 using ServerInterface.Internal.Options;
+using ServerLogic;
 using System;
 using System.Linq;
 using System.Net;
@@ -70,7 +71,7 @@ namespace ServerInterface.Internal
             try
             {
                 var requesterEndPoint = incomingContext.Request.RemoteEndPoint;
-                _authenticationService.Authenticate(requesterEndPoint);
+                await _authenticationService.AuthenticateAsync(requesterEndPoint.Address.ToString(), requesterEndPoint.Port);
 
                 var request = await GetRequest(httpRequest);
 

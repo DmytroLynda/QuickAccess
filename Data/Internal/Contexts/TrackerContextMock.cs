@@ -1,6 +1,7 @@
 ﻿using ClientLogic.ExternalInterfaces;
 using Data.Internal.Exceptions;
 using Data.Internal.Interfaces;
+using ServerLogic.ExternalInterfaces;
 using DomainEntities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Internal.Contexts
 {
-    internal class TrackerContextMock : ITrackerService, ITrackerContext
+    internal class TrackerContextMock : ITrackerService, ClientLogic.ExternalInterfaces.ITrackerContext, ServerLogic.ExternalInterfaces.ITrackerContext
     {
         private readonly Dictionary<User, List<Device>> _userDevices = new Dictionary<User, List<Device>>();
         private readonly Dictionary<Device, Uri> _uris = new Dictionary<Device, Uri>();
@@ -71,6 +72,15 @@ namespace Data.Internal.Contexts
 
                 return true;
             }
+        }
+
+        public Task<bool> IsValid(string address, int port)
+        {
+            var uriBuilder = new UriBuilder();
+            uriBuilder.Host = address;
+            uriBuilder.Port = port;
+
+            return Task.FromResult(_uris.Any(deviceUri => deviceUri.Value.Host == uriBuilder.Uri.Host));
         }
     }
 }

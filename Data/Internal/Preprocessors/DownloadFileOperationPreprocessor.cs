@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.Internal.DataTypes;
+using DomainEntities;
 using ServerInterface.DTOs.RequestTypes;
 using ServerInterface.Enums;
 

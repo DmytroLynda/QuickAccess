@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DomainEntities\DomainEntities.csproj" />
+    <ProjectReference Include="..\ServerLogic\ServerLogic.csproj" />
   </ItemGroup>
 
 </Project>

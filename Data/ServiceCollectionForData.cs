@@ -1,4 +1,5 @@
 ﻿using ClientLogic.ExternalInterfaces;
+using ServerLogic.ExternalInterfaces;
 using Data.Internal.Contexts;
 using Data.Internal.DataTypes;
 using Data.Internal.Factories;
@@ -8,7 +9,6 @@ using Data.Internal.Preprocessors;
 using DomainEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ServerInterface.ExternalInterfaces;
 using System.Collections.Generic;
 
 namespace Data
@@ -19,7 +19,8 @@ namespace Data
         {
             services.AddSingleton<TrackerContextMock>();
             services.AddSingleton<ITrackerService>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
-            services.AddSingleton<ITrackerContext>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
+            services.AddSingleton<ClientLogic.ExternalInterfaces.ITrackerContext>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
+            services.AddSingleton<ServerLogic.ExternalInterfaces.ITrackerContext>(serviceProvider => serviceProvider.GetRequiredService<TrackerContextMock>());
 
             services.Configure<LocalDeviceOptions>(configuration);
             services.AddSingleton<ILocalDeviceContext, LocalDeviceContext>();
@@ -27,6 +28,8 @@ namespace Data
             services.AddSingleton<UserSettingsContext>();
             services.AddSingleton<IUserSettingsContext>(serviceProvider => serviceProvider.GetRequiredService<UserSettingsContext>());
             services.AddSingleton<IUserSettingsProvider>(serviceProvider => serviceProvider.GetRequiredService<UserSettingsContext>());
+
+            services.AddSingleton<IFileContext, FileContext>();
 
             services.AddTransient<IDeviceContextFactory, DeviceContextFactory>();
             services.AddTransient<IOperationPreprocessorFactory, OperationPreprocessorFactory>();

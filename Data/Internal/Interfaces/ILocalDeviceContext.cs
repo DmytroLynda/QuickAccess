@@ -1,4 +1,5 @@
 ﻿using Data.Internal.DataTypes;
+using DomainEntities;
 using System.Threading.Tasks;
 
 namespace Data.Internal.Interfaces

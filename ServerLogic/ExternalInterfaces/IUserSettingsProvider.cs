@@ -1,7 +1,7 @@
 ﻿using DomainEntities;
 using System.Threading.Tasks;
 
-namespace ServerInterface.ExternalInterfaces
+namespace ServerLogic.ExternalInterfaces
 {
     public interface IUserSettingsProvider
     {

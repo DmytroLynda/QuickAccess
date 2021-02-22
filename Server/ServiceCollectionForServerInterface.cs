@@ -4,19 +4,16 @@ using ServerInterface.Internal;
 using ServerInterface.Internal.Interfaces;
 using ServerInterface.Internal.Options;
 using ServerInterface.Internal.RequestHandlers;
-using ServerInterface.Internal.Services;
 using System.Net;
 
 namespace ServerInterface
 {
-    public static class ServiceCollectionForServer
+    public static class ServiceCollectionForServerInterface
     {
-        public static void ConfigureForServer(this IServiceCollection services, IConfigurationSection configuration)
+        public static void ConfigureForServerInterface(this IServiceCollection services, IConfigurationSection configuration)
         {
             services.Configure<HttpServerOptions>(configuration);
             services.AddSingleton<IServer, HttpServer>();
-
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             services.AddTransient<IRequestHandlerFactory, RequestHandlerFactory>();
 

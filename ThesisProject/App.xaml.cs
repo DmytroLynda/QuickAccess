@@ -4,6 +4,7 @@ using Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServerInterface;
+using ServerLogic;
 using System;
 using System.Windows;
 using ThesisProject.Internal.Interfaces;
@@ -24,11 +25,12 @@ namespace ThesisProject
             services.ConfigureForData(Configuration.GetSection("Data"));
 
             //Application layer configuration
-            services.ConfigureForServer(Configuration.GetSection("HttpServer"));
             services.ConfigureForClientLogic();
+            services.ConfigureForServerLogic();
 
-            //UI layer configuration
+            //Interface layer configuration
             services.ConfigureForUI(Configuration.GetSection("UI"));
+            services.ConfigureForServerInterface(Configuration.GetSection("HttpServer"));
 
             //External dependencies
             services.AddLogging();
