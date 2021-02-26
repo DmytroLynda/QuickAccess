@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerInterface.Internal
@@ -23,6 +24,8 @@ namespace ServerInterface.Internal
         private readonly IAuthenticationService _authenticationService;
         private readonly HttpServerOptions _options;
         private readonly HttpListener _httpListener;
+
+        private bool isRunning;
 
         public HttpServer(
             ILogger<HttpServer> logger,
@@ -45,10 +48,13 @@ namespace ServerInterface.Internal
 
         public async Task StartAsync()
         {
+            Thread.CurrentThread.IsBackground = true;
+
             _options.Prefixes.ToList().ForEach(prefix => _httpListener.Prefixes.Add(prefix));
             _httpListener.Start();
 
-            while (true)
+            isRunning = true;
+            while (isRunning)
             {
                 var incomingContext = await _httpListener.GetContextAsync();
 
@@ -116,6 +122,13 @@ namespace ServerInterface.Internal
             var serializedRequest = Encoding.UTF8.GetString(requestBytes);
 
             return JsonConvert.DeserializeObject<RequestDTO>(serializedRequest);
+        }
+
+        public void Stop()
+        {
+            isRunning = false;
+            _httpListener.Prefixes.Clear();
+            _httpListener.Abort();
         }
     }
 }

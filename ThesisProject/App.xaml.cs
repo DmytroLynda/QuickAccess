@@ -7,6 +7,7 @@ using ServerInterface;
 using ServerLogic;
 using System;
 using System.Windows;
+using System.Windows.Threading;
 using ThesisProject.Internal.Interfaces;
 
 namespace ThesisProject
@@ -16,6 +17,8 @@ namespace ThesisProject
     /// </summary>
     public partial class App : Application
     {
+        private IServer _server;
+
         public IServiceProvider ServiceProvider { get; private set; }
         public IConfiguration Configuration { get; private set; }
 
@@ -44,6 +47,9 @@ namespace ThesisProject
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            //Hundles all app exceptions and shows for a user.
+            DispatcherUnhandledException += OnCatchUnhandledException;
+
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("usersettings.json", optional: true, reloadOnChange: true);
@@ -58,8 +64,15 @@ namespace ThesisProject
             var windowManager = ServiceProvider.GetRequiredService<IWindowsManager>();
             windowManager.ShowLoginWindow(caller: null);
 
-            var server = ServiceProvider.GetRequiredService<IServer>();
-            await server.StartAsync();
+            _server = ServiceProvider.GetRequiredService<IServer>();
+            await _server.StartAsync();
+        }
+
+        private void OnCatchUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message);
+
+            e.Handled = true;
         }
     }
 }

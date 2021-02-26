@@ -6,5 +6,6 @@ namespace ServerInterface
     {
         Task StartAsync();
         void Start();
+        void Stop();
     }
 }
